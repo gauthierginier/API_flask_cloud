@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 df = pandas.read_csv('data.csv', usecols=['Region','Year', 'Value'])
 df = df.loc[df['Region'].isin(['Bulgaria'])].sort_values(by = 'Year', ascending = False)
-print(df[0:1])
+print("country: {}, year: {}, emissions: {}".format(*df.iloc[0]))
 
 @app.route('/')
 def hello_world():
