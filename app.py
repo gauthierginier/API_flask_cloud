@@ -6,9 +6,9 @@ app = Flask(__name__)
 
 logging.basicConfig(level=logging.DEBUG)
 
-sortie = pandas.read_csv('data.csv', usecols=['Region','Year', 'Value'])
-df = sortie.loc[sortie['Region'].isin(['Cameroon'])]
-print(df.max().drop(["Region","Year"]))
+df = pandas.read_csv('data.csv', usecols=['Region','Year', 'Value'])
+df = df.loc[df['Region'].isin(['Bulgaria'])].sort_values(by = 'Year', ascending = False)
+print(df[0:1])
 
 @app.route('/')
 def hello_world():
