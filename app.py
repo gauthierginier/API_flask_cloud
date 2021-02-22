@@ -1,15 +1,13 @@
 import json
 import logging
+import pandas
 from flask import Flask, abort
 app = Flask(__name__)
 
 logging.basicConfig(level=logging.DEBUG)
 
-"""
-Récupérer les infos du fichier :
-https://data.un.org/_Docs/SYB/CSV/SYB63_310_202009_Carbon%20Dioxide%20Emission%20Estimates.csv
-"""
-
+sortie = pandas.read_csv('data.csv', usecols=['Year', 'Value'])
+print(dict(sortie))
 @app.route('/')
 def hello_world():
     #utilisé pour tester si l'app fonctionne bien
