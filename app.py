@@ -6,8 +6,10 @@ app = Flask(__name__)
 
 logging.basicConfig(level=logging.DEBUG)
 
-sortie = pandas.read_csv('data.csv', usecols=['Year', 'Value'])
-print(dict(sortie))
+sortie = pandas.read_csv('data.csv', usecols=['Region','Year', 'Value'])
+df = sortie.loc[sortie['Region'].isin(['Cameroon'])]
+print(df.max().drop(["Region","Year"]))
+
 @app.route('/')
 def hello_world():
     #utilisé pour tester si l'app fonctionne bien
