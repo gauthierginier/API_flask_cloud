@@ -65,12 +65,10 @@ def allyears():
 
 
 def byyear(year):
-    print("On est dans la fonction")
     globalemission = ["Emissions (thousand metric tons of carbon dioxide)"]
     df = readcsv('Year', 'Value', 'Emission')
     df = df.loc[df['Year'].isin([str(year)])]
     df = df.loc[df['Emission'].isin(globalemission)]
-    print(df['Value'].mean())
     res = {}
     res["Year"] = year
     res["Total"] = df['Value'].mean()
@@ -91,15 +89,29 @@ def average_for_year(year):
         abort(404)
 
 
+def bypercapita(country):
+    capita = ["Emissions per capita (metric tons of carbon dioxide)"]
+    df = readcsv('Region', 'Year', 'Emission', 'Value')
+    df = df.loc[df['Region'].isin([country.title()])]
+    df = df.loc[df['Emission'].isin(capita)]
+    res = {}
+    nbannee = len(allyears())
+    i = 0
+    while i < nbannee:
+        res[int(df.iloc[i][1])] = float(df.iloc[i][3])
+        i += 1
+    return json.dumps(res)
+
+
 @app.route('/per_capita/<country>')
 def per_capita(country):
     logging.debug(f"Pays demandé : {country}")
-    return None
-    # if country.lower() == "albania":
-    #     return json.dumps({1975:4338.334, 1985 : 6929.926, 1995 : 1848.549, 2005:3825.184, 2015:3824.801, 2016:3674.183, 2017:4342.011})
-    # else:
-    #     #erreur 404 si on demande un pays qui n'est pas connu
-    #     abort(404)
+    if country.title() in allcountries():
+        return bypercapita(country)
+    else:
+        return json.dumps({
+            "message": "Le pays choisi n'est pas dans la liste"})
+        abort(404)
 
 
 if __name__ == "__main__":
