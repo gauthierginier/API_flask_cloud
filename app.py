@@ -1,14 +1,25 @@
 import json
 import logging
 import pandas
-from flask import Flask, abort
+from flask import Flask, abort, jsonify
 app = Flask(__name__)
 
 logging.basicConfig(level=logging.DEBUG)
+def allcountries():
+    df = pandas.read_csv('data.csv', usecols=['Region'])
+    countries = list(set(df['Region'].to_list()))
+    return countries
 
-df = pandas.read_csv('data.csv', usecols=['Region','Year', 'Value'])
-df = df.loc[df['Region'].isin(['Bulgaria'])].sort_values(by = 'Year', ascending = False)
-print("country: {}, year: {}, emissions: {}".format(*df.iloc[0]))
+allcountries()
+@app.route('/latest_by_country2/<country>')
+def bycountry(country):
+    df = pandas.read_csv('data.csv', usecols=['Region','Year', 'Value'])
+    df = df.loc[df['Region'].isin([country])].sort_values(by = 'Year', ascending = False)
+    res = {}
+    res["country"] = str(df.iloc[0][0])
+    res["year"] = int(df.iloc[0][1])
+    res["emissions"] = float(df.iloc[0][2])
+    return jsonify(res)
 
 @app.route('/')
 def hello_world():
@@ -19,18 +30,18 @@ def hello_world():
 def by_country(country):
     #on veut la valeur la plus récente des emissions totales pour le pays demandé
     logging.debug(f"Pays demandé : {country}")
-    if country.lower()=="albania":
-        return json.dumps({"country":"Albania","year":1975, "emissions":4338.3340})
+    if country in allcountries():
+        return bycountry(country)
     else:
-        #erreur 404 si on demande un pays qui n'est pas connu
         abort(404)
+        return json.dumps({"message": "Le pays sélectionné n'est pas dans la liste"})
 
 @app.route('/average_by_year/<year>')
 def average_for_year(year):
     #on cherche la moyenne des émissions totales au niveau mondial pour une année demandée
     logging.debug(f"Année demandée : {year}")
     if year=="1975":
-        return json.dumps({"year":"1975", "total":12333555.9})
+        return jsonify({"year":"1975", "total":12333555.9})
     else:
         abort(404)
 
