@@ -26,41 +26,13 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import json
-import logging
-import pandas
-from flask import Flask, abort
+<pre><code class="python">import logging
+from func_annexe import allcountries, allyears, bycountry, byyear, bypercapita
+from flask import Flask, abort, jsonify
 app = Flask(__name__)
 
+
 logging.basicConfig(level=logging.DEBUG)
-
-
-def readcsv(*colonnes):
-    &#34;&#34;&#34;
-    Cette fonction permet de lire le fichier csv avec pandas.read_csv(),
-    sans prendre ne compte les 2 premières lignes avec header=2,
-    renommant chaques colonnes avec names=[],
-    et permet d&#39;utiliser les colonnes voulues avec usecols=(colonnes).
-
-    This function reads the csv file with pandas.read_csv(),
-    without taking into account the first 2 lines with header=2,
-    renaming each column with names=[],
-    and allows to use the desired columns with usecols=(columns).
-    &#34;&#34;&#34;
-    logging.debug(f&#34;Utilisation de la fonction readcsv({colonnes})&#34;)
-    logging.info(&#34;Lecture du fichier csv&#34;)
-    return pandas.read_csv(
-        &#39;data.csv&#39;,
-        header=2,
-        names=[
-            &#39;id&#39;,
-            &#39;Region&#39;,
-            &#39;Year&#39;,
-            &#39;Emission&#39;,
-            &#39;Value&#39;,
-            &#39;Footnote&#39;,
-            &#39;Source&#39;],
-        usecols=colonnes)
 
 
 @app.route(&#39;/&#39;)
@@ -70,53 +42,18 @@ def hello_world():
     fonctionne en affichant &#39;Hello, World!&#39;.
 
     This function checks that the route for the API
-    works by displaying &#39;Hello, World!
+    works by displaying &#39;Hello, World!.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/
+    result : Hello, World!
+      description: print &#39;Hello, World!&#39;
     &#34;&#34;&#34;
     logging.debug(&#34;Utilisation de la fonction hello_world()&#34;)
     logging.debug(&#34;L&#39;app fonctionne correctement&#34;)
     # utilisé pour tester si l&#39;app fonctionne bien
     return &#39;Hello, World!&#39;
-
-
-def allcountries():
-    &#34;&#34;&#34;
-    Cette fonction permet de réduire la liste des pays en supprimant
-    les doublons avec set() et de les classer
-    par ordre croissant avec sorted().
-    On retrouve chaque pays du fichier dans une liste.
-
-    This function allows you to reduce the list of countries by deleting
-    the duplicates with set() and to sort them
-    in ascending order with sorted().
-    Each country in the file is found in a list.
-    &#34;&#34;&#34;
-    logging.debug(&#34;Utilisation de la fonction allcountries()&#34;)
-    df = readcsv(&#39;Region&#39;)
-    countries = list(sorted(set(df[&#39;Region&#39;].to_list())))
-    logging.debug(countries)
-    return countries
-
-
-def bycountry(country):
-    &#34;&#34;&#34;
-    Cette fonction permet, en fonction du pays choisi, de récupérer
-    l&#39;entrée la plus récente concernant l&#39;émission totale de CO2
-    en Milliers de tonnes.
-
-    This function allows, depending on the chosen country, to retrieve
-    the most recent entry for total CO2 emissions
-    in Thousands of tons.
-    &#34;&#34;&#34;
-    logging.debug(f&#34;Utilisation de la fonction bycountry({country.title()})&#34;)
-    df = readcsv(&#39;Region&#39;, &#39;Year&#39;, &#39;Value&#39;)
-    df = df.loc[df[&#39;Region&#39;].isin([country.title()])]
-    df = df.sort_values(by=&#39;Year&#39;, ascending=False)
-    res = {}
-    res[&#34;Country&#34;] = str(df.iloc[0][0])
-    res[&#34;Year&#34;] = int(df.iloc[0][1])
-    res[&#34;Emissions&#34;] = float(df.iloc[0][2])
-    logging.debug(res)
-    return json.dumps(res)
 
 
 @app.route(&#39;/latest_by_country/&lt;country&gt;&#39;)
@@ -131,63 +68,27 @@ def by_country(country):
 
     This function is used if the route &#39;/latest_by_country/&lt;country&gt;&#39; is used.
     is used.
-    If the selected country is in the list of countries in the allcountries() function
-    then we call the function bycountry()
+    If the selected country is in the list of countries in the allcountries()
+    function then we call the function bycountry()
     Otherwise an error message will warn us that the selected country is not in
     the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/latest_by_country/bulgaria
+    result : {&#34;Country&#34;: &#34;Bulgaria&#34;, &#34;Year&#34;: 2017, &#34;Emissions&#34;: 42819.932}
+      description: print the latest entry for total CO2 emissions
+    in Thousands of tons.
     &#34;&#34;&#34;
     # on veut la valeur la plus récente
     # des emissions totales pour le pays demandé
     logging.debug(f&#34;Utilisation de la fonction by_country({country.title()})&#34;)
     if country.title() in allcountries():
         logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
-        return bycountry(country)
+        return jsonify(bycountry(country))
     else:
         logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
-        return json.dumps({
-            &#34;message&#34;: &#34;Le pays choisi n&#39;est pas dans la liste&#34;})
         abort(404)
-
-
-def allyears():
-    &#34;&#34;&#34;
-    Cette fonction permet de réduire la liste des années en supprimant
-    les doublons avec set() et de les classer
-    par ordre croissant avec sorted().
-    On retrouve chaque année du fichier dans une liste.
-
-    This function allows you to reduce the list of years by deleting
-    the duplicates with set() and to sort them
-    in ascending order with sorted().
-    Each year of the file can be found in a list.
-    &#34;&#34;&#34;
-    logging.debug(&#34;Utilisation de la fonction allyears()&#34;)
-    df = readcsv(&#39;Year&#39;)
-    years = list(sorted(set(df[&#39;Year&#39;].to_list())))
-    logging.debug(years)
-    return years
-
-
-def byyear(year):
-    &#34;&#34;&#34;
-    Cette fonction permet, en fonction de l&#39;année choisi, de récupérer
-    la moyenne des émission totales de CO2 (en Milliers de tonnes)
-    au niveau mondial.
-
-    This function allows, depending on the chosen year, to retrieve
-    average total CO2 emissions (in Thousands of tons)
-    worldwide.
-    &#34;&#34;&#34;
-    logging.debug(f&#34;Utilisation de la fonction byyear({year})&#34;)
-    globalemission = [&#34;Emissions (thousand metric tons of carbon dioxide)&#34;]
-    df = readcsv(&#39;Year&#39;, &#39;Value&#39;, &#39;Emission&#39;)
-    df = df.loc[df[&#39;Year&#39;].isin([str(year)])]
-    df = df.loc[df[&#39;Emission&#39;].isin(globalemission)]
-    res = {}
-    res[&#34;Year&#34;] = year
-    res[&#34;Total&#34;] = round(df[&#39;Value&#39;].mean(), 3)
-    logging.debug(res)
-    return json.dumps(res)
 
 
 @app.route(&#39;/average_by_year/&lt;year&gt;&#39;)
@@ -206,43 +107,23 @@ def average_for_year(year):
     then we call the byyear() function
     Otherwise an error message will warn us that the chosen year is not in
     the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/average_by_year/2017
+    result : {&#34;Year&#34;: &#34;2017&#34;, &#34;Total&#34;: 219666.446}
+      description: print average total CO2 emissions (in Thousands of tons)
+    worldwide.
     &#34;&#34;&#34;
     # on cherche la moyenne des émissions
     # totales au niveau mondial pour une année demandée
     logging.debug(f&#34;Utilisation de la fonction average_for_year({year})&#34;)
     logging.debug(f&#34;Année demandée : {year}&#34;)
     if int(year) in allyears():
-        return byyear(year)
+        return jsonify(byyear(year))
     else:
         logging.warning(f&#34;L&#39;année {year} n&#39;est pas dans la liste&#34;)
-        return json.dumps({
-            &#34;message&#34;: &#34;L&#39;année choisie n&#39;est pas dans la liste&#34;})
         abort(404)
-
-
-def bypercapita(country):
-    &#34;&#34;&#34;
-    Cette fonction permet, en fonction du pays choisi,
-    d&#39;afficher les émissions de CO2 (en tonnes par habitant)
-    par rapport aux différentes années de relevés.
-
-    This function allows, depending on the chosen country,
-    display CO2 emissions (in tons per capita)
-    in relation to the different survey years.
-    &#34;&#34;&#34;
-    logging.debug(f&#34;Utilisation de la fonction bypercapita({country.title()})&#34;)
-    capita = [&#34;Emissions per capita (metric tons of carbon dioxide)&#34;]
-    df = readcsv(&#39;Region&#39;, &#39;Year&#39;, &#39;Emission&#39;, &#39;Value&#39;)
-    df = df.loc[df[&#39;Region&#39;].isin([country.title()])]
-    df = df.loc[df[&#39;Emission&#39;].isin(capita)]
-    res = {}
-    nbannee = len(allyears())
-    i = 0
-    while i &lt; nbannee:
-        res[int(df.iloc[i][1])] = float(df.iloc[i][3])
-        i += 1
-    logging.debug(res)
-    return json.dumps(res)
 
 
 @app.route(&#39;/per_capita/&lt;country&gt;&#39;)
@@ -257,24 +138,41 @@ def per_capita(country):
 
     This function is used if the route &#39;/per_capita/&lt;country&gt;&#39; is used.
     is used.
-    If the selected country is in the list of countries in the allcountries() function
-    then we call the function bypercapita()
+    If the selected country is in the list of countries in the allcountries()
+    function then we call the function bypercapita()
     Otherwise an error message will warn us that the selected country is not in
     the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000//per_capita/Morocco
+    result : {
+        &#34;1975&#34;: 0.543,
+        &#34;1985&#34;: 0.722,
+        &#34;1995&#34;: 0.963,
+        &#34;2005&#34;: 1.285,
+        &#34;2010&#34;: 1.432,
+        &#34;2015&#34;: 1.591,
+        &#34;2016&#34;: 1.568,
+        &#34;2017&#34;: 1.627
+        }
+      description: print CO2 emissions (in tons per capita)
+    in relation to the different survey years.
     &#34;&#34;&#34;
     logging.debug(f&#34;Utilisation de la fonction per_capita({country.title()})&#34;)
     if country.title() in allcountries():
         logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
-        return bypercapita(country)
+        return jsonify(bypercapita(country))
     else:
         logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
-        return json.dumps({
-            &#34;message&#34;: &#34;Le pays choisi n&#39;est pas dans la liste&#34;})
         abort(404)
 
 
 if __name__ == &#34;__main__&#34;:
-    app.config.update(ENV=&#34;development&#34;)
+    app.config.update(
+        ENV=&#34;development&#34;,
+        JSON_SORT_KEYS=False
+        )
     app.run(debug=True)</code></pre>
 </details>
 </section>
@@ -285,76 +183,6 @@ if __name__ == &#34;__main__&#34;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="app.allcountries"><code class="name flex">
-<span>def <span class="ident">allcountries</span></span>(<span>)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Cette fonction permet de réduire la liste des pays en supprimant
-les doublons avec set() et de les classer
-par ordre croissant avec sorted().
-On retrouve chaque pays du fichier dans une liste.</p>
-<p>This function allows you to reduce the list of countries by deleting
-the duplicates with set() and to sort them
-in ascending order with sorted().
-Each country in the file is found in a list.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def allcountries():
-    &#34;&#34;&#34;
-    Cette fonction permet de réduire la liste des pays en supprimant
-    les doublons avec set() et de les classer
-    par ordre croissant avec sorted().
-    On retrouve chaque pays du fichier dans une liste.
-
-    This function allows you to reduce the list of countries by deleting
-    the duplicates with set() and to sort them
-    in ascending order with sorted().
-    Each country in the file is found in a list.
-    &#34;&#34;&#34;
-    logging.debug(&#34;Utilisation de la fonction allcountries()&#34;)
-    df = readcsv(&#39;Region&#39;)
-    countries = list(sorted(set(df[&#39;Region&#39;].to_list())))
-    logging.debug(countries)
-    return countries</code></pre>
-</details>
-</dd>
-<dt id="app.allyears"><code class="name flex">
-<span>def <span class="ident">allyears</span></span>(<span>)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Cette fonction permet de réduire la liste des années en supprimant
-les doublons avec set() et de les classer
-par ordre croissant avec sorted().
-On retrouve chaque année du fichier dans une liste.</p>
-<p>This function allows you to reduce the list of years by deleting
-the duplicates with set() and to sort them
-in ascending order with sorted().
-Each year of the file can be found in a list.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def allyears():
-    &#34;&#34;&#34;
-    Cette fonction permet de réduire la liste des années en supprimant
-    les doublons avec set() et de les classer
-    par ordre croissant avec sorted().
-    On retrouve chaque année du fichier dans une liste.
-
-    This function allows you to reduce the list of years by deleting
-    the duplicates with set() and to sort them
-    in ascending order with sorted().
-    Each year of the file can be found in a list.
-    &#34;&#34;&#34;
-    logging.debug(&#34;Utilisation de la fonction allyears()&#34;)
-    df = readcsv(&#39;Year&#39;)
-    years = list(sorted(set(df[&#39;Year&#39;].to_list())))
-    logging.debug(years)
-    return years</code></pre>
-</details>
-</dd>
 <dt id="app.average_for_year"><code class="name flex">
 <span>def <span class="ident">average_for_year</span></span>(<span>year)</span>
 </code></dt>
@@ -370,7 +198,13 @@ is used.
 If the chosen year is in the list of years in the allyears() function
 then we call the byyear() function
 Otherwise an error message will warn us that the chosen year is not in
-the list.</p></div>
+the list.</p>
+<hr>
+<h2 id="example-request-for-api">Example Request For Api</h2>
+<p>get: <a href="http://localhost:5000/average_by_year/2017">http://localhost:5000/average_by_year/2017</a>
+result : {"Year": "2017", "Total": 219666.446}
+description: print average total CO2 emissions (in Thousands of tons)
+worldwide.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -391,17 +225,22 @@ def average_for_year(year):
     then we call the byyear() function
     Otherwise an error message will warn us that the chosen year is not in
     the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/average_by_year/2017
+    result : {&#34;Year&#34;: &#34;2017&#34;, &#34;Total&#34;: 219666.446}
+      description: print average total CO2 emissions (in Thousands of tons)
+    worldwide.
     &#34;&#34;&#34;
     # on cherche la moyenne des émissions
     # totales au niveau mondial pour une année demandée
     logging.debug(f&#34;Utilisation de la fonction average_for_year({year})&#34;)
     logging.debug(f&#34;Année demandée : {year}&#34;)
     if int(year) in allyears():
-        return byyear(year)
+        return jsonify(byyear(year))
     else:
         logging.warning(f&#34;L&#39;année {year} n&#39;est pas dans la liste&#34;)
-        return json.dumps({
-            &#34;message&#34;: &#34;L&#39;année choisie n&#39;est pas dans la liste&#34;})
         abort(404)</code></pre>
 </details>
 </dd>
@@ -417,10 +256,16 @@ Sinon un message d'erreur nous préviens que le pays choisi n'est pas dans
 la liste.</p>
 <p>This function is used if the route '/latest_by_country/<country>' is used.
 is used.
-If the selected country is in the list of countries in the allcountries() function
-then we call the function bycountry()
+If the selected country is in the list of countries in the allcountries()
+function then we call the function bycountry()
 Otherwise an error message will warn us that the selected country is not in
-the list.</p></div>
+the list.</p>
+<hr>
+<h2 id="example-request-for-api">Example Request For Api</h2>
+<p>get: <a href="http://localhost:5000/latest_by_country/bulgaria">http://localhost:5000/latest_by_country/bulgaria</a>
+result : {"Country": "Bulgaria", "Year": 2017, "Emissions": 42819.932}
+description: print the latest entry for total CO2 emissions
+in Thousands of tons.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -437,133 +282,27 @@ def by_country(country):
 
     This function is used if the route &#39;/latest_by_country/&lt;country&gt;&#39; is used.
     is used.
-    If the selected country is in the list of countries in the allcountries() function
-    then we call the function bycountry()
+    If the selected country is in the list of countries in the allcountries()
+    function then we call the function bycountry()
     Otherwise an error message will warn us that the selected country is not in
     the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/latest_by_country/bulgaria
+    result : {&#34;Country&#34;: &#34;Bulgaria&#34;, &#34;Year&#34;: 2017, &#34;Emissions&#34;: 42819.932}
+      description: print the latest entry for total CO2 emissions
+    in Thousands of tons.
     &#34;&#34;&#34;
     # on veut la valeur la plus récente
     # des emissions totales pour le pays demandé
     logging.debug(f&#34;Utilisation de la fonction by_country({country.title()})&#34;)
     if country.title() in allcountries():
         logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
-        return bycountry(country)
+        return jsonify(bycountry(country))
     else:
         logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
-        return json.dumps({
-            &#34;message&#34;: &#34;Le pays choisi n&#39;est pas dans la liste&#34;})
         abort(404)</code></pre>
-</details>
-</dd>
-<dt id="app.bycountry"><code class="name flex">
-<span>def <span class="ident">bycountry</span></span>(<span>country)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Cette fonction permet, en fonction du pays choisi, de récupérer
-l'entrée la plus récente concernant l'émission totale de CO2
-en Milliers de tonnes.</p>
-<p>This function allows, depending on the chosen country, to retrieve
-the most recent entry for total CO2 emissions
-in Thousands of tons.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def bycountry(country):
-    &#34;&#34;&#34;
-    Cette fonction permet, en fonction du pays choisi, de récupérer
-    l&#39;entrée la plus récente concernant l&#39;émission totale de CO2
-    en Milliers de tonnes.
-
-    This function allows, depending on the chosen country, to retrieve
-    the most recent entry for total CO2 emissions
-    in Thousands of tons.
-    &#34;&#34;&#34;
-    logging.debug(f&#34;Utilisation de la fonction bycountry({country.title()})&#34;)
-    df = readcsv(&#39;Region&#39;, &#39;Year&#39;, &#39;Value&#39;)
-    df = df.loc[df[&#39;Region&#39;].isin([country.title()])]
-    df = df.sort_values(by=&#39;Year&#39;, ascending=False)
-    res = {}
-    res[&#34;Country&#34;] = str(df.iloc[0][0])
-    res[&#34;Year&#34;] = int(df.iloc[0][1])
-    res[&#34;Emissions&#34;] = float(df.iloc[0][2])
-    logging.debug(res)
-    return json.dumps(res)</code></pre>
-</details>
-</dd>
-<dt id="app.bypercapita"><code class="name flex">
-<span>def <span class="ident">bypercapita</span></span>(<span>country)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Cette fonction permet, en fonction du pays choisi,
-d'afficher les émissions de CO2 (en tonnes par habitant)
-par rapport aux différentes années de relevés.</p>
-<p>This function allows, depending on the chosen country,
-display CO2 emissions (in tons per capita)
-in relation to the different survey years.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def bypercapita(country):
-    &#34;&#34;&#34;
-    Cette fonction permet, en fonction du pays choisi,
-    d&#39;afficher les émissions de CO2 (en tonnes par habitant)
-    par rapport aux différentes années de relevés.
-
-    This function allows, depending on the chosen country,
-    display CO2 emissions (in tons per capita)
-    in relation to the different survey years.
-    &#34;&#34;&#34;
-    logging.debug(f&#34;Utilisation de la fonction bypercapita({country.title()})&#34;)
-    capita = [&#34;Emissions per capita (metric tons of carbon dioxide)&#34;]
-    df = readcsv(&#39;Region&#39;, &#39;Year&#39;, &#39;Emission&#39;, &#39;Value&#39;)
-    df = df.loc[df[&#39;Region&#39;].isin([country.title()])]
-    df = df.loc[df[&#39;Emission&#39;].isin(capita)]
-    res = {}
-    nbannee = len(allyears())
-    i = 0
-    while i &lt; nbannee:
-        res[int(df.iloc[i][1])] = float(df.iloc[i][3])
-        i += 1
-    logging.debug(res)
-    return json.dumps(res)</code></pre>
-</details>
-</dd>
-<dt id="app.byyear"><code class="name flex">
-<span>def <span class="ident">byyear</span></span>(<span>year)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Cette fonction permet, en fonction de l'année choisi, de récupérer
-la moyenne des émission totales de CO2 (en Milliers de tonnes)
-au niveau mondial.</p>
-<p>This function allows, depending on the chosen year, to retrieve
-average total CO2 emissions (in Thousands of tons)
-worldwide.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def byyear(year):
-    &#34;&#34;&#34;
-    Cette fonction permet, en fonction de l&#39;année choisi, de récupérer
-    la moyenne des émission totales de CO2 (en Milliers de tonnes)
-    au niveau mondial.
-
-    This function allows, depending on the chosen year, to retrieve
-    average total CO2 emissions (in Thousands of tons)
-    worldwide.
-    &#34;&#34;&#34;
-    logging.debug(f&#34;Utilisation de la fonction byyear({year})&#34;)
-    globalemission = [&#34;Emissions (thousand metric tons of carbon dioxide)&#34;]
-    df = readcsv(&#39;Year&#39;, &#39;Value&#39;, &#39;Emission&#39;)
-    df = df.loc[df[&#39;Year&#39;].isin([str(year)])]
-    df = df.loc[df[&#39;Emission&#39;].isin(globalemission)]
-    res = {}
-    res[&#34;Year&#34;] = year
-    res[&#34;Total&#34;] = round(df[&#39;Value&#39;].mean(), 3)
-    logging.debug(res)
-    return json.dumps(res)</code></pre>
 </details>
 </dd>
 <dt id="app.hello_world"><code class="name flex">
@@ -573,7 +312,12 @@ worldwide.</p></div>
 <div class="desc"><p>Cette fonction permet de vérifier que la route pour l'API
 fonctionne en affichant 'Hello, World!'.</p>
 <p>This function checks that the route for the API
-works by displaying 'Hello, World!</p></div>
+works by displaying 'Hello, World!.</p>
+<hr>
+<h2 id="example-request-for-api">Example Request For Api</h2>
+<p>get: <a href="http://localhost:5000/">http://localhost:5000/</a>
+result : Hello, World!
+description: print 'Hello, World!'</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -585,7 +329,13 @@ def hello_world():
     fonctionne en affichant &#39;Hello, World!&#39;.
 
     This function checks that the route for the API
-    works by displaying &#39;Hello, World!
+    works by displaying &#39;Hello, World!.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/
+    result : Hello, World!
+      description: print &#39;Hello, World!&#39;
     &#34;&#34;&#34;
     logging.debug(&#34;Utilisation de la fonction hello_world()&#34;)
     logging.debug(&#34;L&#39;app fonctionne correctement&#34;)
@@ -605,10 +355,25 @@ Sinon un message d'erreur nous préviens que le pays choisi n'est pas dans
 la liste.</p>
 <p>This function is used if the route '/per_capita/<country>' is used.
 is used.
-If the selected country is in the list of countries in the allcountries() function
-then we call the function bypercapita()
+If the selected country is in the list of countries in the allcountries()
+function then we call the function bypercapita()
 Otherwise an error message will warn us that the selected country is not in
-the list.</p></div>
+the list.</p>
+<hr>
+<h2 id="example-request-for-api">Example Request For Api</h2>
+<p>get: <a href="http://localhost:5000//per_capita/Morocco">http://localhost:5000//per_capita/Morocco</a>
+result : {
+"1975": 0.543,
+"1985": 0.722,
+"1995": 0.963,
+"2005": 1.285,
+"2010": 1.432,
+"2015": 1.591,
+"2016": 1.568,
+"2017": 1.627
+}
+description: print CO2 emissions (in tons per capita)
+in relation to the different survey years.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -625,64 +390,34 @@ def per_capita(country):
 
     This function is used if the route &#39;/per_capita/&lt;country&gt;&#39; is used.
     is used.
-    If the selected country is in the list of countries in the allcountries() function
-    then we call the function bypercapita()
+    If the selected country is in the list of countries in the allcountries()
+    function then we call the function bypercapita()
     Otherwise an error message will warn us that the selected country is not in
     the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000//per_capita/Morocco
+    result : {
+        &#34;1975&#34;: 0.543,
+        &#34;1985&#34;: 0.722,
+        &#34;1995&#34;: 0.963,
+        &#34;2005&#34;: 1.285,
+        &#34;2010&#34;: 1.432,
+        &#34;2015&#34;: 1.591,
+        &#34;2016&#34;: 1.568,
+        &#34;2017&#34;: 1.627
+        }
+      description: print CO2 emissions (in tons per capita)
+    in relation to the different survey years.
     &#34;&#34;&#34;
     logging.debug(f&#34;Utilisation de la fonction per_capita({country.title()})&#34;)
     if country.title() in allcountries():
         logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
-        return bypercapita(country)
+        return jsonify(bypercapita(country))
     else:
         logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
-        return json.dumps({
-            &#34;message&#34;: &#34;Le pays choisi n&#39;est pas dans la liste&#34;})
         abort(404)</code></pre>
-</details>
-</dd>
-<dt id="app.readcsv"><code class="name flex">
-<span>def <span class="ident">readcsv</span></span>(<span>*colonnes)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Cette fonction permet de lire le fichier csv avec pandas.read_csv(),
-sans prendre ne compte les 2 premières lignes avec header=2,
-renommant chaques colonnes avec names=[],
-et permet d'utiliser les colonnes voulues avec usecols=(colonnes).</p>
-<p>This function reads the csv file with pandas.read_csv(),
-without taking into account the first 2 lines with header=2,
-renaming each column with names=[],
-and allows to use the desired columns with usecols=(columns).</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def readcsv(*colonnes):
-    &#34;&#34;&#34;
-    Cette fonction permet de lire le fichier csv avec pandas.read_csv(),
-    sans prendre ne compte les 2 premières lignes avec header=2,
-    renommant chaques colonnes avec names=[],
-    et permet d&#39;utiliser les colonnes voulues avec usecols=(colonnes).
-
-    This function reads the csv file with pandas.read_csv(),
-    without taking into account the first 2 lines with header=2,
-    renaming each column with names=[],
-    and allows to use the desired columns with usecols=(columns).
-    &#34;&#34;&#34;
-    logging.debug(f&#34;Utilisation de la fonction readcsv({colonnes})&#34;)
-    logging.info(&#34;Lecture du fichier csv&#34;)
-    return pandas.read_csv(
-        &#39;data.csv&#39;,
-        header=2,
-        names=[
-            &#39;id&#39;,
-            &#39;Region&#39;,
-            &#39;Year&#39;,
-            &#39;Emission&#39;,
-            &#39;Value&#39;,
-            &#39;Footnote&#39;,
-            &#39;Source&#39;],
-        usecols=colonnes)</code></pre>
 </details>
 </dd>
 </dl>
@@ -697,17 +432,11 @@ and allows to use the desired columns with usecols=(columns).</p></div>
 </div>
 <ul id="index">
 <li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="two-column">
-<li><code><a title="app.allcountries" href="#app.allcountries">allcountries</a></code></li>
-<li><code><a title="app.allyears" href="#app.allyears">allyears</a></code></li>
+<ul class="">
 <li><code><a title="app.average_for_year" href="#app.average_for_year">average_for_year</a></code></li>
 <li><code><a title="app.by_country" href="#app.by_country">by_country</a></code></li>
-<li><code><a title="app.bycountry" href="#app.bycountry">bycountry</a></code></li>
-<li><code><a title="app.bypercapita" href="#app.bypercapita">bypercapita</a></code></li>
-<li><code><a title="app.byyear" href="#app.byyear">byyear</a></code></li>
 <li><code><a title="app.hello_world" href="#app.hello_world">hello_world</a></code></li>
 <li><code><a title="app.per_capita" href="#app.per_capita">per_capita</a></code></li>
-<li><code><a title="app.readcsv" href="#app.readcsv">readcsv</a></code></li>
 </ul>
 </li>
 </ul>
