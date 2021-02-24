@@ -1,8 +1,9 @@
-import json
 import logging
+import json
 import pandas
 from flask import Flask, abort
 app = Flask(__name__)
+
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -42,7 +43,13 @@ def hello_world():
     fonctionne en affichant 'Hello, World!'.
 
     This function checks that the route for the API
-    works by displaying 'Hello, World!
+    works by displaying 'Hello, World!.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/
+    result : Hello, World!
+      description: print 'Hello, World!'
     """
     logging.debug("Utilisation de la fonction hello_world()")
     logging.debug("L'app fonctionne correctement")
@@ -103,10 +110,17 @@ def by_country(country):
 
     This function is used if the route '/latest_by_country/<country>' is used.
     is used.
-    If the selected country is in the list of countries in the allcountries() function
-    then we call the function bycountry()
+    If the selected country is in the list of countries in the allcountries()
+    function then we call the function bycountry()
     Otherwise an error message will warn us that the selected country is not in
     the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/latest_by_country/bulgaria
+    result : {"Country": "Bulgaria", "Year": 2017, "Emissions": 42819.932}
+      description: print the latest entry for total CO2 emissions
+    in Thousands of tons.
     """
     # on veut la valeur la plus récente
     # des emissions totales pour le pays demandé
@@ -178,6 +192,13 @@ def average_for_year(year):
     then we call the byyear() function
     Otherwise an error message will warn us that the chosen year is not in
     the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/average_by_year/2017
+    result : {"Year": "2017", "Total": 219666.446}
+      description: print average total CO2 emissions (in Thousands of tons)
+    worldwide.
     """
     # on cherche la moyenne des émissions
     # totales au niveau mondial pour une année demandée
@@ -229,10 +250,26 @@ def per_capita(country):
 
     This function is used if the route '/per_capita/<country>' is used.
     is used.
-    If the selected country is in the list of countries in the allcountries() function
-    then we call the function bypercapita()
+    If the selected country is in the list of countries in the allcountries()
+    function then we call the function bypercapita()
     Otherwise an error message will warn us that the selected country is not in
     the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000//per_capita/Morocco
+    result : {
+        "1975": 0.543,
+        "1985": 0.722,
+        "1995": 0.963,
+        "2005": 1.285,
+        "2010": 1.432,
+        "2015": 1.591,
+        "2016": 1.568,
+        "2017": 1.627
+        }
+      description: print CO2 emissions (in tons per capita)
+    in relation to the different survey years.
     """
     logging.debug(f"Utilisation de la fonction per_capita({country.title()})")
     if country.title() in allcountries():
