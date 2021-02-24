@@ -9,7 +9,11 @@ class TestApp(unittest.TestCase):
         self.assertNotEqual(app.allcountries(),[])
 
     def test_bycountry(self):
-        pass
+        self.assertEqual(app.bycountry("Cameroon"),'{"Country": "Cameroon", "Year": 2017, "Emissions": 6152.919}')
+        self.assertEqual(app.bycountry("Serbia"),'{"Country": "Serbia", "Year": 2017, "Emissions": 46129.569}')
+
+    
+    
 
 
 

@@ -1,7 +1,7 @@
 import json
 import logging
 import pandas
-from flask import Flask, abort
+from flask import Flask, abort, jsonify
 app = Flask(__name__)
 
 logging.basicConfig(level=logging.DEBUG)
