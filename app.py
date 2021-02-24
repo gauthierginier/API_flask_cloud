@@ -130,8 +130,6 @@ def by_country(country):
         return bycountry(country)
     else:
         logging.warning(f"Le pays {country.title()} n'est pas dans la liste")
-        return jsonify({
-            "message": "Le pays choisi n'est pas dans la liste"})
         abort(404)
 
 
@@ -208,8 +206,6 @@ def average_for_year(year):
         return byyear(year)
     else:
         logging.warning(f"L'année {year} n'est pas dans la liste")
-        return jsonify({
-            "message": "L'année choisie n'est pas dans la liste"})
         abort(404)
 
 
@@ -277,8 +273,6 @@ def per_capita(country):
         return bypercapita(country)
     else:
         logging.warning(f"Le pays {country.title()} n'est pas dans la liste")
-        return jsonify({
-            "message": "Le pays choisi n'est pas dans la liste"})
         abort(404)
 
 
