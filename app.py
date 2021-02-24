@@ -95,7 +95,7 @@ def bycountry(country):
     res["Year"] = int(df.iloc[0][1])
     res["Emissions"] = float(df.iloc[0][2])
     logging.debug(res)
-    return json.dumps(res)
+    return jsonify(res)
 
 
 @app.route('/latest_by_country/<country>')
@@ -130,7 +130,7 @@ def by_country(country):
         return bycountry(country)
     else:
         logging.warning(f"Le pays {country.title()} n'est pas dans la liste")
-        return json.dumps({
+        return jsonify({
             "message": "Le pays choisi n'est pas dans la liste"})
         abort(404)
 
@@ -173,7 +173,7 @@ def byyear(year):
     res["Year"] = year
     res["Total"] = round(df['Value'].mean(), 3)
     logging.debug(res)
-    return json.dumps(res)
+    return jsonify(res)
 
 
 @app.route('/average_by_year/<year>')
@@ -208,7 +208,7 @@ def average_for_year(year):
         return byyear(year)
     else:
         logging.warning(f"L'année {year} n'est pas dans la liste")
-        return json.dumps({
+        return jsonify({
             "message": "L'année choisie n'est pas dans la liste"})
         abort(404)
 
@@ -235,7 +235,7 @@ def bypercapita(country):
         res[int(df.iloc[i][1])] = float(df.iloc[i][3])
         i += 1
     logging.debug(res)
-    return json.dumps(res)
+    return jsonify(res)
 
 
 @app.route('/per_capita/<country>')
@@ -277,11 +277,14 @@ def per_capita(country):
         return bypercapita(country)
     else:
         logging.warning(f"Le pays {country.title()} n'est pas dans la liste")
-        return json.dumps({
+        return jsonify({
             "message": "Le pays choisi n'est pas dans la liste"})
         abort(404)
 
 
 if __name__ == "__main__":
-    app.config.update(ENV="development")
+    app.config.update(
+        ENV="development",
+        JSON_SORT_KEYS=False
+        )
     app.run(debug=True)
