@@ -1,6 +1,6 @@
 import logging
 from func_annexe import allcountries, allyears, bycountry, byyear, bypercapita
-from flask import Flask, abort, jsonify
+from flask import Flask, abort, jsonify, render_template
 app = Flask(__name__)
 
 
@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 @app.route('/')
-def hello_world():
+def index():
     """
     Cette fonction permet de vérifier que la route pour l'API
     fonctionne en affichant 'Hello, World!'.
@@ -22,10 +22,10 @@ def hello_world():
     result : Hello, World!
       description: print 'Hello, World!'
     """
-    logging.debug("Utilisation de la fonction hello_world()")
+    logging.debug("Utilisation de la fonction index()")
     logging.debug("L'app fonctionne correctement")
     # utilisé pour tester si l'app fonctionne bien
-    return 'Hello, World!'
+    return render_template('index.html')
 
 
 @app.route('/latest_by_country/<country>')
