@@ -58,6 +58,7 @@ def by_country(country):
     if country.title() in allcountries():
         logging.debug(f"Pays demandé : {country.title()}")
         return jsonify(bycountry(country))
+
     else:
         logging.warning(f"Le pays {country.title()} n'est pas dans la liste")
         abort(404)
@@ -90,11 +91,16 @@ def average_for_year(year):
     # on cherche la moyenne des émissions
     # totales au niveau mondial pour une année demandée
     logging.debug(f"Utilisation de la fonction average_for_year({year})")
-    logging.debug(f"Année demandée : {year}")
-    if int(year) in allyears():
-        return jsonify(byyear(year))
-    else:
-        logging.warning(f"L'année {year} n'est pas dans la liste")
+    try:
+        if int(year) in allyears() and len(year) == 4:
+            logging.debug(f"Année demandée : {year}")
+            return jsonify(byyear(year))
+        else:
+            logging.warning(f"L'année {year} n'est pas dans la liste")
+            abort(404)
+    except ValueError as e:
+        logging.warning(f"Erreur : {e}")
+        logging.warning(f"{year} n'est pas une année")
         abort(404)
 
 
@@ -135,9 +141,10 @@ def per_capita(country):
     if country.title() in allcountries():
         logging.debug(f"Pays demandé : {country.title()}")
         return jsonify(bypercapita(country))
+
     else:
         logging.warning(f"Le pays {country.title()} n'est pas dans la liste")
-        abort(404)
+        jsonify(abort(404))
 
 
 if __name__ == "__main__":
