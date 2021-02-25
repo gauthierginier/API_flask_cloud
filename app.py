@@ -11,16 +11,16 @@ logging.basicConfig(level=logging.DEBUG)
 def index():
     """
     Cette fonction permet de vérifier que la route pour l'API
-    fonctionne en affichant 'Hello, World!'.
+    fonctionne en arrivant sur le manuel du fonctionnement de l'API .
 
-    This function checks that the route for the API
-    works by displaying 'Hello, World!.
+    This function checks that the route for the PLC
+    works by arriving on the manuel of the operation of the API .
     ---
     example request for API
     ---
     get: http://localhost:5000/
-    result : Hello, World!
-      description: print 'Hello, World!'
+    result : Manuel API en page HTML
+      description: Manuel de l'API en HTML
     """
     logging.debug("Utilisation de la fonction index()")
     logging.debug("L'app fonctionne correctement")
