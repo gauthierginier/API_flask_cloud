@@ -1,14 +1,16 @@
 import unittest
 import app_o
+from func_annexe_o import allcountries, allyears
 
 
 class TestByCountry(unittest.TestCase):
     # check response status is 200
     def test_latest_by_country_status(self):
         tester = app_o.app.test_client(self)
-        response = tester.get("/latest_by_country/Bulgaria")
-        status_code = response.status_code
-        self.assertEqual(status_code, 200)
+        for pays in allcountries():
+            response = tester.get(f"/latest_by_country/{pays}")
+            status_code = response.status_code
+            self.assertEqual(status_code, 200)
 
     # check the response content
     def test_latest_by_country_type(self):
@@ -27,9 +29,10 @@ class TestAverageByYear(unittest.TestCase):
     # check response status is 200
     def test_average_by_year_status(self):
         tester = app_o.app.test_client(self)
-        response = tester.get("/average_by_year/2017")
-        status_code = response.status_code
-        self.assertEqual(status_code, 200)
+        for annee in allyears():
+            response = tester.get(f"/average_by_year/{annee}")
+            status_code = response.status_code
+            self.assertEqual(status_code, 200)
 
     # check the response content
     def test_average_by_year_type(self):
