@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'kingthings_foundationregular';
+    src: url('fonts_carte_visite/Kingthings_Foundation-webfont.eot');
+    src: url('fonts_carte_visite/Kingthings_Foundation-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts_carte_visite/Kingthings_Foundation-webfont.woff2') format('woff2'),
+         url('fonts_carte_visite/Kingthings_Foundation-webfont.woff') format('woff'),
+         url('fonts_carte_visite/Kingthings_Foundation-webfont.ttf') format('truetype'),
+         url('fonts_carte_visite/Kingthings_Foundation-webfont.svg#kingthings_foundationregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+body{
+	font-family:'kingthings_foundationregular',Georgia, Comic Sans Ms, sans-serif;
+	background-color: azure;
+}
+
+ul{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-top: 25px;
+	list-style: none;
+}
+
+li{
+	margin: 30px;
+	padding: 15px;
+	width: 60%;
+	box-shadow: 3px 3px 10px rgb(146, 146, 146);
+}
+
+h1{
+	margin: auto;
+	margin-bottom: 40px;
+	text-align: center;
+	color:rgb(58, 58, 58);
+}

@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>app API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>app</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import logging
+from func_annexe import allcountries, allyears, bycountry, byyear, bypercapita
+from flask import Flask, abort, jsonify
+app = Flask(__name__)
+
+
+logging.basicConfig(level=logging.DEBUG)
+
+
+@app.route(&#39;/&#39;)
+def hello_world():
+    &#34;&#34;&#34;
+    Cette fonction permet de vérifier que la route pour l&#39;API
+    fonctionne en affichant &#39;Hello, World!&#39;.
+
+    This function checks that the route for the API
+    works by displaying &#39;Hello, World!.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/
+    result : Hello, World!
+      description: print &#39;Hello, World!&#39;
+    &#34;&#34;&#34;
+    logging.debug(&#34;Utilisation de la fonction hello_world()&#34;)
+    logging.debug(&#34;L&#39;app fonctionne correctement&#34;)
+    # utilisé pour tester si l&#39;app fonctionne bien
+    return &#39;Hello, World!&#39;
+
+
+@app.route(&#39;/latest_by_country/&lt;country&gt;&#39;)
+def by_country(country):
+    &#34;&#34;&#34;
+    Cette fonction est utilisé si la route &#39;/latest_by_country/&lt;country&gt;&#39;
+    est utilisée.
+    Si le pays choisi est dans la liste des pays de la fonction allcountries()
+    alors on appel la fonction bycountry()
+    Sinon un message d&#39;erreur nous préviens que le pays choisi n&#39;est pas dans
+    la liste.
+
+    This function is used if the route &#39;/latest_by_country/&lt;country&gt;&#39; is used.
+    is used.
+    If the selected country is in the list of countries in the allcountries()
+    function then we call the function bycountry()
+    Otherwise an error message will warn us that the selected country is not in
+    the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/latest_by_country/bulgaria
+    result : {&#34;Country&#34;: &#34;Bulgaria&#34;, &#34;Year&#34;: 2017, &#34;Emissions&#34;: 42819.932}
+      description: print the latest entry for total CO2 emissions
+    in Thousands of tons.
+    &#34;&#34;&#34;
+    # on veut la valeur la plus récente
+    # des emissions totales pour le pays demandé
+    logging.debug(f&#34;Utilisation de la fonction by_country({country.title()})&#34;)
+    if country.title() in allcountries():
+        logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
+        return jsonify(bycountry(country))
+    else:
+        logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
+        abort(404)
+
+
+@app.route(&#39;/average_by_year/&lt;year&gt;&#39;)
+def average_for_year(year):
+    &#34;&#34;&#34;
+    Cette fonction est utilisé si la route &#39;/average_by_year/&lt;year&gt;&#39;
+    est utilisée.
+    Si l&#39;année choisie est dans la liste des années de la fonction allyears()
+    alors on appel la fonction byyear()
+    Sinon un message d&#39;erreur nous préviens que l&#39;année choisie n&#39;est pas dans
+    la liste.
+
+    This function is used if the route &#39;/average_by_year/&lt;year&gt;&#39;.
+    is used.
+    If the chosen year is in the list of years in the allyears() function
+    then we call the byyear() function
+    Otherwise an error message will warn us that the chosen year is not in
+    the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/average_by_year/2017
+    result : {&#34;Year&#34;: &#34;2017&#34;, &#34;Total&#34;: 219666.446}
+      description: print average total CO2 emissions (in Thousands of tons)
+    worldwide.
+    &#34;&#34;&#34;
+    # on cherche la moyenne des émissions
+    # totales au niveau mondial pour une année demandée
+    logging.debug(f&#34;Utilisation de la fonction average_for_year({year})&#34;)
+    logging.debug(f&#34;Année demandée : {year}&#34;)
+    if int(year) in allyears():
+        return jsonify(byyear(year))
+    else:
+        logging.warning(f&#34;L&#39;année {year} n&#39;est pas dans la liste&#34;)
+        abort(404)
+
+
+@app.route(&#39;/per_capita/&lt;country&gt;&#39;)
+def per_capita(country):
+    &#34;&#34;&#34;
+    Cette fonction est utilisé si la route &#39;/per_capita/&lt;country&gt;&#39;
+    est utilisée.
+    Si le pays choisi est dans la liste des pays de la fonction allcountries()
+    alors on appel la fonction bypercapita()
+    Sinon un message d&#39;erreur nous préviens que le pays choisi n&#39;est pas dans
+    la liste.
+
+    This function is used if the route &#39;/per_capita/&lt;country&gt;&#39; is used.
+    is used.
+    If the selected country is in the list of countries in the allcountries()
+    function then we call the function bypercapita()
+    Otherwise an error message will warn us that the selected country is not in
+    the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000//per_capita/Morocco
+    result : {
+        &#34;1975&#34;: 0.543,
+        &#34;1985&#34;: 0.722,
+        &#34;1995&#34;: 0.963,
+        &#34;2005&#34;: 1.285,
+        &#34;2010&#34;: 1.432,
+        &#34;2015&#34;: 1.591,
+        &#34;2016&#34;: 1.568,
+        &#34;2017&#34;: 1.627
+        }
+      description: print CO2 emissions (in tons per capita)
+    in relation to the different survey years.
+    &#34;&#34;&#34;
+    logging.debug(f&#34;Utilisation de la fonction per_capita({country.title()})&#34;)
+    if country.title() in allcountries():
+        logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
+        return jsonify(bypercapita(country))
+    else:
+        logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
+        abort(404)
+
+
+if __name__ == &#34;__main__&#34;:
+    app.config.update(
+        ENV=&#34;development&#34;,
+        JSON_SORT_KEYS=False
+        )
+    app.run(debug=True)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="app.average_for_year"><code class="name flex">
+<span>def <span class="ident">average_for_year</span></span>(<span>year)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Cette fonction est utilisé si la route '/average_by_year/<year>'
+est utilisée.
+Si l'année choisie est dans la liste des années de la fonction allyears()
+alors on appel la fonction byyear()
+Sinon un message d'erreur nous préviens que l'année choisie n'est pas dans
+la liste.</p>
+<p>This function is used if the route '/average_by_year/<year>'.
+is used.
+If the chosen year is in the list of years in the allyears() function
+then we call the byyear() function
+Otherwise an error message will warn us that the chosen year is not in
+the list.</p>
+<hr>
+<h2 id="example-request-for-api">Example Request For Api</h2>
+<p>get: <a href="http://localhost:5000/average_by_year/2017">http://localhost:5000/average_by_year/2017</a>
+result : {"Year": "2017", "Total": 219666.446}
+description: print average total CO2 emissions (in Thousands of tons)
+worldwide.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.route(&#39;/average_by_year/&lt;year&gt;&#39;)
+def average_for_year(year):
+    &#34;&#34;&#34;
+    Cette fonction est utilisé si la route &#39;/average_by_year/&lt;year&gt;&#39;
+    est utilisée.
+    Si l&#39;année choisie est dans la liste des années de la fonction allyears()
+    alors on appel la fonction byyear()
+    Sinon un message d&#39;erreur nous préviens que l&#39;année choisie n&#39;est pas dans
+    la liste.
+
+    This function is used if the route &#39;/average_by_year/&lt;year&gt;&#39;.
+    is used.
+    If the chosen year is in the list of years in the allyears() function
+    then we call the byyear() function
+    Otherwise an error message will warn us that the chosen year is not in
+    the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/average_by_year/2017
+    result : {&#34;Year&#34;: &#34;2017&#34;, &#34;Total&#34;: 219666.446}
+      description: print average total CO2 emissions (in Thousands of tons)
+    worldwide.
+    &#34;&#34;&#34;
+    # on cherche la moyenne des émissions
+    # totales au niveau mondial pour une année demandée
+    logging.debug(f&#34;Utilisation de la fonction average_for_year({year})&#34;)
+    logging.debug(f&#34;Année demandée : {year}&#34;)
+    if int(year) in allyears():
+        return jsonify(byyear(year))
+    else:
+        logging.warning(f&#34;L&#39;année {year} n&#39;est pas dans la liste&#34;)
+        abort(404)</code></pre>
+</details>
+</dd>
+<dt id="app.by_country"><code class="name flex">
+<span>def <span class="ident">by_country</span></span>(<span>country)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Cette fonction est utilisé si la route '/latest_by_country/<country>'
+est utilisée.
+Si le pays choisi est dans la liste des pays de la fonction allcountries()
+alors on appel la fonction bycountry()
+Sinon un message d'erreur nous préviens que le pays choisi n'est pas dans
+la liste.</p>
+<p>This function is used if the route '/latest_by_country/<country>' is used.
+is used.
+If the selected country is in the list of countries in the allcountries()
+function then we call the function bycountry()
+Otherwise an error message will warn us that the selected country is not in
+the list.</p>
+<hr>
+<h2 id="example-request-for-api">Example Request For Api</h2>
+<p>get: <a href="http://localhost:5000/latest_by_country/bulgaria">http://localhost:5000/latest_by_country/bulgaria</a>
+result : {"Country": "Bulgaria", "Year": 2017, "Emissions": 42819.932}
+description: print the latest entry for total CO2 emissions
+in Thousands of tons.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.route(&#39;/latest_by_country/&lt;country&gt;&#39;)
+def by_country(country):
+    &#34;&#34;&#34;
+    Cette fonction est utilisé si la route &#39;/latest_by_country/&lt;country&gt;&#39;
+    est utilisée.
+    Si le pays choisi est dans la liste des pays de la fonction allcountries()
+    alors on appel la fonction bycountry()
+    Sinon un message d&#39;erreur nous préviens que le pays choisi n&#39;est pas dans
+    la liste.
+
+    This function is used if the route &#39;/latest_by_country/&lt;country&gt;&#39; is used.
+    is used.
+    If the selected country is in the list of countries in the allcountries()
+    function then we call the function bycountry()
+    Otherwise an error message will warn us that the selected country is not in
+    the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/latest_by_country/bulgaria
+    result : {&#34;Country&#34;: &#34;Bulgaria&#34;, &#34;Year&#34;: 2017, &#34;Emissions&#34;: 42819.932}
+      description: print the latest entry for total CO2 emissions
+    in Thousands of tons.
+    &#34;&#34;&#34;
+    # on veut la valeur la plus récente
+    # des emissions totales pour le pays demandé
+    logging.debug(f&#34;Utilisation de la fonction by_country({country.title()})&#34;)
+    if country.title() in allcountries():
+        logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
+        return jsonify(bycountry(country))
+    else:
+        logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
+        abort(404)</code></pre>
+</details>
+</dd>
+<dt id="app.hello_world"><code class="name flex">
+<span>def <span class="ident">hello_world</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Cette fonction permet de vérifier que la route pour l'API
+fonctionne en affichant 'Hello, World!'.</p>
+<p>This function checks that the route for the API
+works by displaying 'Hello, World!.</p>
+<hr>
+<h2 id="example-request-for-api">Example Request For Api</h2>
+<p>get: <a href="http://localhost:5000/">http://localhost:5000/</a>
+result : Hello, World!
+description: print 'Hello, World!'</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.route(&#39;/&#39;)
+def hello_world():
+    &#34;&#34;&#34;
+    Cette fonction permet de vérifier que la route pour l&#39;API
+    fonctionne en affichant &#39;Hello, World!&#39;.
+
+    This function checks that the route for the API
+    works by displaying &#39;Hello, World!.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/
+    result : Hello, World!
+      description: print &#39;Hello, World!&#39;
+    &#34;&#34;&#34;
+    logging.debug(&#34;Utilisation de la fonction hello_world()&#34;)
+    logging.debug(&#34;L&#39;app fonctionne correctement&#34;)
+    # utilisé pour tester si l&#39;app fonctionne bien
+    return &#39;Hello, World!&#39;</code></pre>
+</details>
+</dd>
+<dt id="app.per_capita"><code class="name flex">
+<span>def <span class="ident">per_capita</span></span>(<span>country)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Cette fonction est utilisé si la route '/per_capita/<country>'
+est utilisée.
+Si le pays choisi est dans la liste des pays de la fonction allcountries()
+alors on appel la fonction bypercapita()
+Sinon un message d'erreur nous préviens que le pays choisi n'est pas dans
+la liste.</p>
+<p>This function is used if the route '/per_capita/<country>' is used.
+is used.
+If the selected country is in the list of countries in the allcountries()
+function then we call the function bypercapita()
+Otherwise an error message will warn us that the selected country is not in
+the list.</p>
+<hr>
+<h2 id="example-request-for-api">Example Request For Api</h2>
+<p>get: <a href="http://localhost:5000//per_capita/Morocco">http://localhost:5000//per_capita/Morocco</a>
+result : {
+"1975": 0.543,
+"1985": 0.722,
+"1995": 0.963,
+"2005": 1.285,
+"2010": 1.432,
+"2015": 1.591,
+"2016": 1.568,
+"2017": 1.627
+}
+description: print CO2 emissions (in tons per capita)
+in relation to the different survey years.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.route(&#39;/per_capita/&lt;country&gt;&#39;)
+def per_capita(country):
+    &#34;&#34;&#34;
+    Cette fonction est utilisé si la route &#39;/per_capita/&lt;country&gt;&#39;
+    est utilisée.
+    Si le pays choisi est dans la liste des pays de la fonction allcountries()
+    alors on appel la fonction bypercapita()
+    Sinon un message d&#39;erreur nous préviens que le pays choisi n&#39;est pas dans
+    la liste.
+
+    This function is used if the route &#39;/per_capita/&lt;country&gt;&#39; is used.
+    is used.
+    If the selected country is in the list of countries in the allcountries()
+    function then we call the function bypercapita()
+    Otherwise an error message will warn us that the selected country is not in
+    the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000//per_capita/Morocco
+    result : {
+        &#34;1975&#34;: 0.543,
+        &#34;1985&#34;: 0.722,
+        &#34;1995&#34;: 0.963,
+        &#34;2005&#34;: 1.285,
+        &#34;2010&#34;: 1.432,
+        &#34;2015&#34;: 1.591,
+        &#34;2016&#34;: 1.568,
+        &#34;2017&#34;: 1.627
+        }
+      description: print CO2 emissions (in tons per capita)
+    in relation to the different survey years.
+    &#34;&#34;&#34;
+    logging.debug(f&#34;Utilisation de la fonction per_capita({country.title()})&#34;)
+    if country.title() in allcountries():
+        logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
+        return jsonify(bypercapita(country))
+    else:
+        logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
+        abort(404)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="app.average_for_year" href="#app.average_for_year">average_for_year</a></code></li>
+<li><code><a title="app.by_country" href="#app.by_country">by_country</a></code></li>
+<li><code><a title="app.hello_world" href="#app.hello_world">hello_world</a></code></li>
+<li><code><a title="app.per_capita" href="#app.per_capita">per_capita</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
