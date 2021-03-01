@@ -56,7 +56,7 @@ def allyears():
     Each year of the file can be found in a list.
     """
     logging.debug("Utilisation de la fonction allyears()")
-    df = readcsv('Year')
+    df = readcsv('Year', 'Region')
     years = list(sorted(set(df['Year'].to_list())))
     logging.debug(years)
     return years
@@ -74,7 +74,7 @@ def byyear(year):
     """
     logging.debug(f"Utilisation de la fonction byyear({year})")
     globalemission = ["Emissions (thousand metric tons of carbon dioxide)"]
-    df = readcsv('Year', 'Value', 'Emission')
+    df = readcsv('Year', 'Value', 'Emission', 'Region')
     df = df.loc[df['Year'].isin([str(year)])]
     df = df.loc[df['Emission'].isin(globalemission)]
     res = {}
