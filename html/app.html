@@ -28,7 +28,7 @@
 </summary>
 <pre><code class="python">import logging
 from func_annexe import allcountries, allyears, bycountry, byyear, bypercapita
-from flask import Flask, abort, jsonify
+from flask import Flask, abort, jsonify, render_template
 app = Flask(__name__)
 
 
@@ -36,24 +36,24 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 @app.route(&#39;/&#39;)
-def hello_world():
+def index():
     &#34;&#34;&#34;
     Cette fonction permet de vérifier que la route pour l&#39;API
-    fonctionne en affichant &#39;Hello, World!&#39;.
+    fonctionne en arrivant sur le manuel du fonctionnement de l&#39;API .
 
-    This function checks that the route for the API
-    works by displaying &#39;Hello, World!.
+    This function checks that the route for the PLC
+    works by arriving on the manuel of the operation of the API .
     ---
     example request for API
     ---
     get: http://localhost:5000/
-    result : Hello, World!
-      description: print &#39;Hello, World!&#39;
+    result : Manuel API en page HTML
+      description: Manuel de l&#39;API en HTML
     &#34;&#34;&#34;
-    logging.debug(&#34;Utilisation de la fonction hello_world()&#34;)
+    logging.debug(&#34;Utilisation de la fonction index()&#34;)
     logging.debug(&#34;L&#39;app fonctionne correctement&#34;)
     # utilisé pour tester si l&#39;app fonctionne bien
-    return &#39;Hello, World!&#39;
+    return render_template(&#39;index.html&#39;)
 
 
 @app.route(&#39;/latest_by_country/&lt;country&gt;&#39;)
@@ -83,9 +83,10 @@ def by_country(country):
     # on veut la valeur la plus récente
     # des emissions totales pour le pays demandé
     logging.debug(f&#34;Utilisation de la fonction by_country({country.title()})&#34;)
-    if country.title() in allcountries():
+    if country.lower() in allcountries():
         logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
-        return jsonify(bycountry(country))
+        return jsonify(bycountry(country.lower()))
+
     else:
         logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
         abort(404)
@@ -118,11 +119,16 @@ def average_for_year(year):
     # on cherche la moyenne des émissions
     # totales au niveau mondial pour une année demandée
     logging.debug(f&#34;Utilisation de la fonction average_for_year({year})&#34;)
-    logging.debug(f&#34;Année demandée : {year}&#34;)
-    if int(year) in allyears():
-        return jsonify(byyear(year))
-    else:
-        logging.warning(f&#34;L&#39;année {year} n&#39;est pas dans la liste&#34;)
+    try:
+        if int(year) in allyears() and len(year) == 4:
+            logging.debug(f&#34;Année demandée : {year}&#34;)
+            return jsonify(byyear(year))
+        else:
+            logging.warning(f&#34;L&#39;année {year} n&#39;est pas dans la liste&#34;)
+            abort(404)
+    except ValueError as e:
+        logging.warning(f&#34;Erreur : {e}&#34;)
+        logging.warning(f&#34;{year} n&#39;est pas une année&#34;)
         abort(404)
 
 
@@ -160,12 +166,13 @@ def per_capita(country):
     in relation to the different survey years.
     &#34;&#34;&#34;
     logging.debug(f&#34;Utilisation de la fonction per_capita({country.title()})&#34;)
-    if country.title() in allcountries():
+    if country.lower() in allcountries():
         logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
-        return jsonify(bypercapita(country))
+        return jsonify(bypercapita(country.lower()))
+
     else:
         logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
-        abort(404)
+        jsonify(abort(404))
 
 
 if __name__ == &#34;__main__&#34;:
@@ -236,11 +243,16 @@ def average_for_year(year):
     # on cherche la moyenne des émissions
     # totales au niveau mondial pour une année demandée
     logging.debug(f&#34;Utilisation de la fonction average_for_year({year})&#34;)
-    logging.debug(f&#34;Année demandée : {year}&#34;)
-    if int(year) in allyears():
-        return jsonify(byyear(year))
-    else:
-        logging.warning(f&#34;L&#39;année {year} n&#39;est pas dans la liste&#34;)
+    try:
+        if int(year) in allyears() and len(year) == 4:
+            logging.debug(f&#34;Année demandée : {year}&#34;)
+            return jsonify(byyear(year))
+        else:
+            logging.warning(f&#34;L&#39;année {year} n&#39;est pas dans la liste&#34;)
+            abort(404)
+    except ValueError as e:
+        logging.warning(f&#34;Erreur : {e}&#34;)
+        logging.warning(f&#34;{year} n&#39;est pas une année&#34;)
         abort(404)</code></pre>
 </details>
 </dd>
@@ -297,50 +309,51 @@ def by_country(country):
     # on veut la valeur la plus récente
     # des emissions totales pour le pays demandé
     logging.debug(f&#34;Utilisation de la fonction by_country({country.title()})&#34;)
-    if country.title() in allcountries():
+    if country.lower() in allcountries():
         logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
-        return jsonify(bycountry(country))
+        return jsonify(bycountry(country.lower()))
+
     else:
         logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
         abort(404)</code></pre>
 </details>
 </dd>
-<dt id="app.hello_world"><code class="name flex">
-<span>def <span class="ident">hello_world</span></span>(<span>)</span>
+<dt id="app.index"><code class="name flex">
+<span>def <span class="ident">index</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Cette fonction permet de vérifier que la route pour l'API
-fonctionne en affichant 'Hello, World!'.</p>
-<p>This function checks that the route for the API
-works by displaying 'Hello, World!.</p>
+fonctionne en arrivant sur le manuel du fonctionnement de l'API .</p>
+<p>This function checks that the route for the PLC
+works by arriving on the manuel of the operation of the API .</p>
 <hr>
 <h2 id="example-request-for-api">Example Request For Api</h2>
 <p>get: <a href="http://localhost:5000/">http://localhost:5000/</a>
-result : Hello, World!
-description: print 'Hello, World!'</p></div>
+result : Manuel API en page HTML
+description: Manuel de l'API en HTML</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@app.route(&#39;/&#39;)
-def hello_world():
+def index():
     &#34;&#34;&#34;
     Cette fonction permet de vérifier que la route pour l&#39;API
-    fonctionne en affichant &#39;Hello, World!&#39;.
+    fonctionne en arrivant sur le manuel du fonctionnement de l&#39;API .
 
-    This function checks that the route for the API
-    works by displaying &#39;Hello, World!.
+    This function checks that the route for the PLC
+    works by arriving on the manuel of the operation of the API .
     ---
     example request for API
     ---
     get: http://localhost:5000/
-    result : Hello, World!
-      description: print &#39;Hello, World!&#39;
+    result : Manuel API en page HTML
+      description: Manuel de l&#39;API en HTML
     &#34;&#34;&#34;
-    logging.debug(&#34;Utilisation de la fonction hello_world()&#34;)
+    logging.debug(&#34;Utilisation de la fonction index()&#34;)
     logging.debug(&#34;L&#39;app fonctionne correctement&#34;)
     # utilisé pour tester si l&#39;app fonctionne bien
-    return &#39;Hello, World!&#39;</code></pre>
+    return render_template(&#39;index.html&#39;)</code></pre>
 </details>
 </dd>
 <dt id="app.per_capita"><code class="name flex">
@@ -412,12 +425,13 @@ def per_capita(country):
     in relation to the different survey years.
     &#34;&#34;&#34;
     logging.debug(f&#34;Utilisation de la fonction per_capita({country.title()})&#34;)
-    if country.title() in allcountries():
+    if country.lower() in allcountries():
         logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
-        return jsonify(bypercapita(country))
+        return jsonify(bypercapita(country.lower()))
+
     else:
         logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
-        abort(404)</code></pre>
+        jsonify(abort(404))</code></pre>
 </details>
 </dd>
 </dl>
@@ -435,7 +449,7 @@ def per_capita(country):
 <ul class="">
 <li><code><a title="app.average_for_year" href="#app.average_for_year">average_for_year</a></code></li>
 <li><code><a title="app.by_country" href="#app.by_country">by_country</a></code></li>
-<li><code><a title="app.hello_world" href="#app.hello_world">hello_world</a></code></li>
+<li><code><a title="app.index" href="#app.index">index</a></code></li>
 <li><code><a title="app.per_capita" href="#app.per_capita">per_capita</a></code></li>
 </ul>
 </li>

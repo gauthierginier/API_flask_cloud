@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>func_annexe API documentation</title>
+<title>func_annexe_o API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,7 +19,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>func_annexe</code></h1>
+<h1 class="title">Module <code>func_annexe_o</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -27,7 +27,10 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import logging
-from readcsv import readcsv
+import numpy as np
+import pycountry_convert as pc
+from statistics import mean
+from readcsv_o import readcsv
 
 
 def allcountries():
@@ -134,6 +137,160 @@ def bypercapita(country):
         res[int(df.iloc[i][1])] = float(df.iloc[i][3])
         i += 1
     logging.debug(res)
+    return res
+
+
+def allcontinent():
+    &#34;&#34;&#34;
+    Liste de tout les continents
+
+    List of all continents
+    &#34;&#34;&#34;
+    all_continent = [
+        &#34;Europe&#34;,
+        &#34;Asia&#34;,
+        &#34;Africa&#34;,
+        &#34;North America&#34;,
+        &#34;South America&#34;,
+        &#34;Oceania&#34;,
+        &#34;Antartic&#34;
+        ]
+    return all_continent
+
+
+def country_to_continent(country_name):
+    &#34;&#34;&#34;
+    Cette fonction permet de retrouver le continent en fonction du pays renseigné
+    country_name = &#34;France&#34;
+    country_continent_name retourne &#34;Europe&#34;
+
+    This function allows you to find the continent according to the country you have entered
+    country_name = &#34;France
+    country_continent_name returns &#34;Europe&#34;.
+    &#34;&#34;&#34;
+    country_alpha2 = pc.country_name_to_country_alpha2(country_name)
+    country_continent_code = pc.country_alpha2_to_continent_code(
+        country_alpha2)
+    country_continent_name = pc.convert_continent_code_to_continent_name(
+        country_continent_code)
+    return country_continent_name
+
+
+europe = []
+asia = []
+africa = []
+north_america = []
+south_america = []
+oceania = []
+antartica = []
+continent = {}
+
+
+def nom_continent(country_name):
+    &#34;&#34;&#34;
+    En fonction du retour du continent par rapport au nom de pays renseigné,
+    ajout le pays dans la liste du dictionnaire correpondant.
+    Si country_name = &#34;France&#34;
+    Ajout &#34;France&#34; à la liste europe associé à la clé &#34;Europe&#34;
+    du dictionnaire continent
+
+    According to the return of the continent in relation to the country name filled in,
+    added the country in the list of the corresponding dictionary.
+    If country_name = &#34;France
+    Addition of &#34;France&#34; to the europe list associated with the key &#34;Europe&#34;.
+    from the continent dictionary
+    &#34;&#34;&#34;
+    try:
+        if country_name.title() == &#39;Kosovo&#39;:
+            europe.append(country_name)
+            continent[&#34;Europe&#34;] = europe
+        elif country_name.title() == &#39;Bosnia And Herzegovina&#39;:
+            europe.append(country_name)
+            continent[&#34;Europe&#34;] = europe
+        elif country_name.title() == &#39;Republic Of Moldova&#39;:
+            europe.append(country_name)
+            continent[&#34;Europe&#34;] = europe
+        elif country_name.title() == &#39;Trinidad And Tobago&#39;:
+            south_america.append(country_name)
+            continent[&#34;South America&#34;] = south_america
+        elif country_name.title() == &#39;United States Of America&#39;:
+            north_america.append(country_name)
+            continent[&#34;North America&#34;] = north_america
+        elif country_to_continent(country_name.title()) == &#34;Europe&#34;:
+            europe.append(country_name)
+            continent[&#34;Europe&#34;] = europe
+        elif country_to_continent(country_name.title()) == &#34;Asia&#34;:
+            asia.append(country_name)
+            continent[&#34;Asia&#34;] = asia
+        elif country_to_continent(country_name.title()) == &#34;Africa&#34;:
+            africa.append(country_name)
+            continent[&#34;Africa&#34;] = africa
+        elif country_to_continent(country_name.title()) == &#34;North America&#34;:
+            north_america.append(country_name)
+            continent[&#34;North America&#34;] = north_america
+        elif country_to_continent(country_name.title()) == &#34;South America&#34;:
+            south_america.append(country_name)
+            continent[&#34;South America&#34;] = south_america
+        elif country_to_continent(country_name.title()) == &#34;Oceania&#34;:
+            oceania.append(country_name)
+            continent[&#34;Oceania&#34;] = oceania
+        elif country_to_continent(country_name.title()) == &#34;Antartic&#34;:
+            antartica.append(country_name)
+            continent[&#34;Antartic&#34;] = antartica
+        else:
+            print(&#34;Hey BOUG, il y a peut etre un problème&#34;)
+    except KeyError as e:
+        print(f&#34;{e} Tiens tu as une erreur ici aussi&#34;)
+
+
+def percontinents():
+    &#34;&#34;&#34;
+    Cette fonction permet de passer chaque pays du fichier csv
+    dans la fonction nom_continent et retourne le dictionnaire
+    continent complété
+
+    This function allows to pass each country from the csv file
+    in the function continent_name and returns the dictionary
+    continent completed
+    &#34;&#34;&#34;
+    for country_name in allcountries():
+        nom_continent(country_name)
+    return continent
+
+
+def bycontinent(continents):
+    &#34;&#34;&#34;
+    Fonction qui permet d&#39;afficher la moyenne de CO2 pour un continent
+    Si continents = &#34;&#34;Asia&#34;
+    Retourne {
+        &#34;Continent&#34;: &#34;Asia&#34;,
+        &#34;Year&#34;: 2017,
+        &#34;Emissions&#34;: 197420.5882857143
+        }
+
+    Function to display the average CO2 for a continent
+    If continents = &#34;&#34;Asia
+    Return {
+        &#34;Continent&#34;: &#34;Asia&#34;,
+        &#34;Year: 2017,
+        &#34;Emissions&#34;: 197420.5882857143
+        }
+    &#34;&#34;&#34;
+    dfmoy = []
+    for country in percontinents()[continents]:
+        df = readcsv(&#39;Region&#39;, &#39;Year&#39;, &#39;Value&#39;, &#39;Emission&#39;)
+        df = df.loc[df[&#39;Region&#39;].isin([country])]
+        df = df.sort_values(by=&#39;Year&#39;, ascending=False)
+        dfyear = df.iloc[0][1]
+        df = df.iloc[0][3]
+        if isinstance(df, np.float):
+            dfmoy.append(df)
+            moy = mean(dfmoy)
+    res = {}
+    res[&#34;Continent&#34;] = str(continents)
+    res[&#34;Year&#34;] = int(dfyear)
+    res[&#34;Emissions&#34;] = float(moy)
+    logging.debug(res)
     return res</code></pre>
 </details>
 </section>
@@ -144,7 +301,35 @@ def bypercapita(country):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="func_annexe.allcountries"><code class="name flex">
+<dt id="func_annexe_o.allcontinent"><code class="name flex">
+<span>def <span class="ident">allcontinent</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Liste de tout les continents</p>
+<p>List of all continents</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def allcontinent():
+    &#34;&#34;&#34;
+    Liste de tout les continents
+
+    List of all continents
+    &#34;&#34;&#34;
+    all_continent = [
+        &#34;Europe&#34;,
+        &#34;Asia&#34;,
+        &#34;Africa&#34;,
+        &#34;North America&#34;,
+        &#34;South America&#34;,
+        &#34;Oceania&#34;,
+        &#34;Antartic&#34;
+        ]
+    return all_continent</code></pre>
+</details>
+</dd>
+<dt id="func_annexe_o.allcountries"><code class="name flex">
 <span>def <span class="ident">allcountries</span></span>(<span>)</span>
 </code></dt>
 <dd>
@@ -179,7 +364,7 @@ Each country in the file is found in a list.</p></div>
     return countries</code></pre>
 </details>
 </dd>
-<dt id="func_annexe.allyears"><code class="name flex">
+<dt id="func_annexe_o.allyears"><code class="name flex">
 <span>def <span class="ident">allyears</span></span>(<span>)</span>
 </code></dt>
 <dd>
@@ -214,7 +399,65 @@ Each year of the file can be found in a list.</p></div>
     return years</code></pre>
 </details>
 </dd>
-<dt id="func_annexe.bycountry"><code class="name flex">
+<dt id="func_annexe_o.bycontinent"><code class="name flex">
+<span>def <span class="ident">bycontinent</span></span>(<span>continents)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fonction qui permet d'afficher la moyenne de CO2 pour un continent
+Si continents = ""Asia"
+Retourne {
+"Continent": "Asia",
+"Year": 2017,
+"Emissions": 197420.5882857143
+}</p>
+<p>Function to display the average CO2 for a continent
+If continents = ""Asia
+Return {
+"Continent": "Asia",
+"Year: 2017,
+"Emissions": 197420.5882857143
+}</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def bycontinent(continents):
+    &#34;&#34;&#34;
+    Fonction qui permet d&#39;afficher la moyenne de CO2 pour un continent
+    Si continents = &#34;&#34;Asia&#34;
+    Retourne {
+        &#34;Continent&#34;: &#34;Asia&#34;,
+        &#34;Year&#34;: 2017,
+        &#34;Emissions&#34;: 197420.5882857143
+        }
+
+    Function to display the average CO2 for a continent
+    If continents = &#34;&#34;Asia
+    Return {
+        &#34;Continent&#34;: &#34;Asia&#34;,
+        &#34;Year: 2017,
+        &#34;Emissions&#34;: 197420.5882857143
+        }
+    &#34;&#34;&#34;
+    dfmoy = []
+    for country in percontinents()[continents]:
+        df = readcsv(&#39;Region&#39;, &#39;Year&#39;, &#39;Value&#39;, &#39;Emission&#39;)
+        df = df.loc[df[&#39;Region&#39;].isin([country])]
+        df = df.sort_values(by=&#39;Year&#39;, ascending=False)
+        dfyear = df.iloc[0][1]
+        df = df.iloc[0][3]
+        if isinstance(df, np.float):
+            dfmoy.append(df)
+            moy = mean(dfmoy)
+    res = {}
+    res[&#34;Continent&#34;] = str(continents)
+    res[&#34;Year&#34;] = int(dfyear)
+    res[&#34;Emissions&#34;] = float(moy)
+    logging.debug(res)
+    return res</code></pre>
+</details>
+</dd>
+<dt id="func_annexe_o.bycountry"><code class="name flex">
 <span>def <span class="ident">bycountry</span></span>(<span>country)</span>
 </code></dt>
 <dd>
@@ -250,7 +493,7 @@ in Thousands of tons.</p></div>
     return res</code></pre>
 </details>
 </dd>
-<dt id="func_annexe.bypercapita"><code class="name flex">
+<dt id="func_annexe_o.bypercapita"><code class="name flex">
 <span>def <span class="ident">bypercapita</span></span>(<span>country)</span>
 </code></dt>
 <dd>
@@ -289,7 +532,7 @@ in relation to the different survey years.</p></div>
     return res</code></pre>
 </details>
 </dd>
-<dt id="func_annexe.byyear"><code class="name flex">
+<dt id="func_annexe_o.byyear"><code class="name flex">
 <span>def <span class="ident">byyear</span></span>(<span>year)</span>
 </code></dt>
 <dd>
@@ -325,6 +568,142 @@ worldwide.</p></div>
     return res</code></pre>
 </details>
 </dd>
+<dt id="func_annexe_o.country_to_continent"><code class="name flex">
+<span>def <span class="ident">country_to_continent</span></span>(<span>country_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Cette fonction permet de retrouver le continent en fonction du pays renseigné
+country_name = "France"
+country_continent_name retourne "Europe"</p>
+<p>This function allows you to find the continent according to the country you have entered
+country_name = "France
+country_continent_name returns "Europe".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def country_to_continent(country_name):
+    &#34;&#34;&#34;
+    Cette fonction permet de retrouver le continent en fonction du pays renseigné
+    country_name = &#34;France&#34;
+    country_continent_name retourne &#34;Europe&#34;
+
+    This function allows you to find the continent according to the country you have entered
+    country_name = &#34;France
+    country_continent_name returns &#34;Europe&#34;.
+    &#34;&#34;&#34;
+    country_alpha2 = pc.country_name_to_country_alpha2(country_name)
+    country_continent_code = pc.country_alpha2_to_continent_code(
+        country_alpha2)
+    country_continent_name = pc.convert_continent_code_to_continent_name(
+        country_continent_code)
+    return country_continent_name</code></pre>
+</details>
+</dd>
+<dt id="func_annexe_o.nom_continent"><code class="name flex">
+<span>def <span class="ident">nom_continent</span></span>(<span>country_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>En fonction du retour du continent par rapport au nom de pays renseigné,
+ajout le pays dans la liste du dictionnaire correpondant.
+Si country_name = "France"
+Ajout "France" à la liste europe associé à la clé "Europe"
+du dictionnaire continent</p>
+<p>According to the return of the continent in relation to the country name filled in,
+added the country in the list of the corresponding dictionary.
+If country_name = "France
+Addition of "France" to the europe list associated with the key "Europe".
+from the continent dictionary</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def nom_continent(country_name):
+    &#34;&#34;&#34;
+    En fonction du retour du continent par rapport au nom de pays renseigné,
+    ajout le pays dans la liste du dictionnaire correpondant.
+    Si country_name = &#34;France&#34;
+    Ajout &#34;France&#34; à la liste europe associé à la clé &#34;Europe&#34;
+    du dictionnaire continent
+
+    According to the return of the continent in relation to the country name filled in,
+    added the country in the list of the corresponding dictionary.
+    If country_name = &#34;France
+    Addition of &#34;France&#34; to the europe list associated with the key &#34;Europe&#34;.
+    from the continent dictionary
+    &#34;&#34;&#34;
+    try:
+        if country_name.title() == &#39;Kosovo&#39;:
+            europe.append(country_name)
+            continent[&#34;Europe&#34;] = europe
+        elif country_name.title() == &#39;Bosnia And Herzegovina&#39;:
+            europe.append(country_name)
+            continent[&#34;Europe&#34;] = europe
+        elif country_name.title() == &#39;Republic Of Moldova&#39;:
+            europe.append(country_name)
+            continent[&#34;Europe&#34;] = europe
+        elif country_name.title() == &#39;Trinidad And Tobago&#39;:
+            south_america.append(country_name)
+            continent[&#34;South America&#34;] = south_america
+        elif country_name.title() == &#39;United States Of America&#39;:
+            north_america.append(country_name)
+            continent[&#34;North America&#34;] = north_america
+        elif country_to_continent(country_name.title()) == &#34;Europe&#34;:
+            europe.append(country_name)
+            continent[&#34;Europe&#34;] = europe
+        elif country_to_continent(country_name.title()) == &#34;Asia&#34;:
+            asia.append(country_name)
+            continent[&#34;Asia&#34;] = asia
+        elif country_to_continent(country_name.title()) == &#34;Africa&#34;:
+            africa.append(country_name)
+            continent[&#34;Africa&#34;] = africa
+        elif country_to_continent(country_name.title()) == &#34;North America&#34;:
+            north_america.append(country_name)
+            continent[&#34;North America&#34;] = north_america
+        elif country_to_continent(country_name.title()) == &#34;South America&#34;:
+            south_america.append(country_name)
+            continent[&#34;South America&#34;] = south_america
+        elif country_to_continent(country_name.title()) == &#34;Oceania&#34;:
+            oceania.append(country_name)
+            continent[&#34;Oceania&#34;] = oceania
+        elif country_to_continent(country_name.title()) == &#34;Antartic&#34;:
+            antartica.append(country_name)
+            continent[&#34;Antartic&#34;] = antartica
+        else:
+            print(&#34;Hey BOUG, il y a peut etre un problème&#34;)
+    except KeyError as e:
+        print(f&#34;{e} Tiens tu as une erreur ici aussi&#34;)</code></pre>
+</details>
+</dd>
+<dt id="func_annexe_o.percontinents"><code class="name flex">
+<span>def <span class="ident">percontinents</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Cette fonction permet de passer chaque pays du fichier csv
+dans la fonction nom_continent et retourne le dictionnaire
+continent complété</p>
+<p>This function allows to pass each country from the csv file
+in the function continent_name and returns the dictionary
+continent completed</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def percontinents():
+    &#34;&#34;&#34;
+    Cette fonction permet de passer chaque pays du fichier csv
+    dans la fonction nom_continent et retourne le dictionnaire
+    continent complété
+
+    This function allows to pass each country from the csv file
+    in the function continent_name and returns the dictionary
+    continent completed
+    &#34;&#34;&#34;
+    for country_name in allcountries():
+        nom_continent(country_name)
+    return continent</code></pre>
+</details>
+</dd>
 </dl>
 </section>
 <section>
@@ -338,11 +717,16 @@ worldwide.</p></div>
 <ul id="index">
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="func_annexe.allcountries" href="#func_annexe.allcountries">allcountries</a></code></li>
-<li><code><a title="func_annexe.allyears" href="#func_annexe.allyears">allyears</a></code></li>
-<li><code><a title="func_annexe.bycountry" href="#func_annexe.bycountry">bycountry</a></code></li>
-<li><code><a title="func_annexe.bypercapita" href="#func_annexe.bypercapita">bypercapita</a></code></li>
-<li><code><a title="func_annexe.byyear" href="#func_annexe.byyear">byyear</a></code></li>
+<li><code><a title="func_annexe_o.allcontinent" href="#func_annexe_o.allcontinent">allcontinent</a></code></li>
+<li><code><a title="func_annexe_o.allcountries" href="#func_annexe_o.allcountries">allcountries</a></code></li>
+<li><code><a title="func_annexe_o.allyears" href="#func_annexe_o.allyears">allyears</a></code></li>
+<li><code><a title="func_annexe_o.bycontinent" href="#func_annexe_o.bycontinent">bycontinent</a></code></li>
+<li><code><a title="func_annexe_o.bycountry" href="#func_annexe_o.bycountry">bycountry</a></code></li>
+<li><code><a title="func_annexe_o.bypercapita" href="#func_annexe_o.bypercapita">bypercapita</a></code></li>
+<li><code><a title="func_annexe_o.byyear" href="#func_annexe_o.byyear">byyear</a></code></li>
+<li><code><a title="func_annexe_o.country_to_continent" href="#func_annexe_o.country_to_continent">country_to_continent</a></code></li>
+<li><code><a title="func_annexe_o.nom_continent" href="#func_annexe_o.nom_continent">nom_continent</a></code></li>
+<li><code><a title="func_annexe_o.percontinents" href="#func_annexe_o.percontinents">percontinents</a></code></li>
 </ul>
 </li>
 </ul>

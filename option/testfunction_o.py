@@ -2,6 +2,7 @@ import unittest
 import func_annexe_o
 from readcsv_o import readcsv
 
+
 """Ce script test
     les fonctions """
 

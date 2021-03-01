@@ -35,16 +35,20 @@ def readcsv(*colonnes):
     Cette fonction permet de lire le fichier csv avec pandas.read_csv(),
     sans prendre ne compte les 2 premières lignes avec header=2,
     renommant chaques colonnes avec names=[],
-    et permet d&#39;utiliser les colonnes voulues avec usecols=(colonnes).
+    et permet d&#39;utiliser les colonnes voulues avec usecols=(colonnes),
+    d&#39;encoder le fichier en &#39;utf-8&#39; et uniformise la langue et le format
+    de certain pays.
 
     This function reads the csv file with pandas.read_csv(),
     without taking into account the first 2 lines with header=2,
     renaming each column with names=[],
-    and allows to use the desired columns with usecols=(columns).
+    and allows to use the desired columns with usecols=(columns),
+    to encode the file in &#39;utf-8&#39; and standardize the language and format.
+    of certain countries.
     &#34;&#34;&#34;
     logging.debug(f&#34;Utilisation de la fonction readcsv({colonnes})&#34;)
     logging.info(&#34;Lecture du fichier csv&#34;)
-    return pandas.read_csv(
+    df = pandas.read_csv(
         &#39;data.csv&#39;,
         header=2,
         names=[
@@ -55,7 +59,28 @@ def readcsv(*colonnes):
             &#39;Value&#39;,
             &#39;Footnote&#39;,
             &#39;Source&#39;],
-        usecols=colonnes)</code></pre>
+        usecols=colonnes,
+        encoding=&#39;utf-8&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;Bolivia (Plurin. State of)&#39;], &#39;Bolivia&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;China, Hong Kong SAR&#39;], &#39;China&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;Côte d’Ivoire&#39;], &#39;Ivory Coast&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#34;Dem. People&#39;s Rep. Korea&#34;], &#39;North Korea&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;Dem. Rep. of the Congo&#39;], &#39;Congo&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;Iran (Islamic Republic of)&#39;], &#39;Iran&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;Republic of Korea&#39;], &#39;South Korea&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;United Rep. of Tanzania&#39;], &#39;Tanzania&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;Venezuela (Boliv. Rep. of)&#39;], &#39;Venezuela&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].str.lower()
+    return df</code></pre>
 </details>
 </section>
 <section>
@@ -72,11 +97,15 @@ def readcsv(*colonnes):
 <div class="desc"><p>Cette fonction permet de lire le fichier csv avec pandas.read_csv(),
 sans prendre ne compte les 2 premières lignes avec header=2,
 renommant chaques colonnes avec names=[],
-et permet d'utiliser les colonnes voulues avec usecols=(colonnes).</p>
+et permet d'utiliser les colonnes voulues avec usecols=(colonnes),
+d'encoder le fichier en 'utf-8' et uniformise la langue et le format
+de certain pays.</p>
 <p>This function reads the csv file with pandas.read_csv(),
 without taking into account the first 2 lines with header=2,
 renaming each column with names=[],
-and allows to use the desired columns with usecols=(columns).</p></div>
+and allows to use the desired columns with usecols=(columns),
+to encode the file in 'utf-8' and standardize the language and format.
+of certain countries.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -86,16 +115,20 @@ and allows to use the desired columns with usecols=(columns).</p></div>
     Cette fonction permet de lire le fichier csv avec pandas.read_csv(),
     sans prendre ne compte les 2 premières lignes avec header=2,
     renommant chaques colonnes avec names=[],
-    et permet d&#39;utiliser les colonnes voulues avec usecols=(colonnes).
+    et permet d&#39;utiliser les colonnes voulues avec usecols=(colonnes),
+    d&#39;encoder le fichier en &#39;utf-8&#39; et uniformise la langue et le format
+    de certain pays.
 
     This function reads the csv file with pandas.read_csv(),
     without taking into account the first 2 lines with header=2,
     renaming each column with names=[],
-    and allows to use the desired columns with usecols=(columns).
+    and allows to use the desired columns with usecols=(columns),
+    to encode the file in &#39;utf-8&#39; and standardize the language and format.
+    of certain countries.
     &#34;&#34;&#34;
     logging.debug(f&#34;Utilisation de la fonction readcsv({colonnes})&#34;)
     logging.info(&#34;Lecture du fichier csv&#34;)
-    return pandas.read_csv(
+    df = pandas.read_csv(
         &#39;data.csv&#39;,
         header=2,
         names=[
@@ -106,7 +139,28 @@ and allows to use the desired columns with usecols=(columns).</p></div>
             &#39;Value&#39;,
             &#39;Footnote&#39;,
             &#39;Source&#39;],
-        usecols=colonnes)</code></pre>
+        usecols=colonnes,
+        encoding=&#39;utf-8&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;Bolivia (Plurin. State of)&#39;], &#39;Bolivia&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;China, Hong Kong SAR&#39;], &#39;China&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;Côte d’Ivoire&#39;], &#39;Ivory Coast&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#34;Dem. People&#39;s Rep. Korea&#34;], &#39;North Korea&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;Dem. Rep. of the Congo&#39;], &#39;Congo&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;Iran (Islamic Republic of)&#39;], &#39;Iran&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;Republic of Korea&#39;], &#39;South Korea&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;United Rep. of Tanzania&#39;], &#39;Tanzania&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].replace(
+        [&#39;Venezuela (Boliv. Rep. of)&#39;], &#39;Venezuela&#39;)
+    df[&#39;Region&#39;] = df[&#39;Region&#39;].str.lower()
+    return df</code></pre>
 </details>
 </dd>
 </dl>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>app API documentation</title>
+<title>app_o API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,7 +19,7 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>app</code></h1>
+<h1 class="title">Module <code>app_o</code></h1>
 </header>
 <section id="section-intro">
 <details class="source">
@@ -27,8 +27,9 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">import logging
-from func_annexe import allcountries, allyears, bycountry, byyear, bypercapita
-from flask import Flask, abort, jsonify
+from func_annexe_o import allcountries, allyears, allcontinent
+from func_annexe_o import bycountry, byyear, bypercapita, bycontinent
+from flask import Flask, abort, jsonify, render_template
 app = Flask(__name__)
 
 
@@ -36,24 +37,24 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 @app.route(&#39;/&#39;)
-def hello_world():
+def index():
     &#34;&#34;&#34;
     Cette fonction permet de vérifier que la route pour l&#39;API
-    fonctionne en affichant &#39;Hello, World!&#39;.
+    fonctionne en arrivant sur le manuel du fonctionnement de l&#39;API .
 
-    This function checks that the route for the API
-    works by displaying &#39;Hello, World!.
+    This function checks that the route for the PLC
+    works by arriving on the manuel of the operation of the API .
     ---
     example request for API
     ---
     get: http://localhost:5000/
-    result : Hello, World!
-      description: print &#39;Hello, World!&#39;
+    result : Manuel API en page HTML
+      description: Manuel de l&#39;API en HTML
     &#34;&#34;&#34;
-    logging.debug(&#34;Utilisation de la fonction hello_world()&#34;)
+    logging.debug(&#34;Utilisation de la fonction index()&#34;)
     logging.debug(&#34;L&#39;app fonctionne correctement&#34;)
     # utilisé pour tester si l&#39;app fonctionne bien
-    return &#39;Hello, World!&#39;
+    return render_template(&#39;index.html&#39;)
 
 
 @app.route(&#39;/latest_by_country/&lt;country&gt;&#39;)
@@ -82,12 +83,13 @@ def by_country(country):
     &#34;&#34;&#34;
     # on veut la valeur la plus récente
     # des emissions totales pour le pays demandé
-    logging.debug(f&#34;Utilisation de la fonction by_country({country.title()})&#34;)
-    if country.title() in allcountries():
-        logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
-        return jsonify(bycountry(country))
+    logging.debug(f&#34;Utilisation de la fonction by_country({country})&#34;)
+    if country.lower() in allcountries():
+        logging.debug(f&#34;Pays demandé : {country}&#34;)
+        return jsonify(bycountry(country.lower()))
+
     else:
-        logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
+        logging.warning(f&#34;Le pays {country} n&#39;est pas dans la liste&#34;)
         abort(404)
 
 
@@ -118,11 +120,16 @@ def average_for_year(year):
     # on cherche la moyenne des émissions
     # totales au niveau mondial pour une année demandée
     logging.debug(f&#34;Utilisation de la fonction average_for_year({year})&#34;)
-    logging.debug(f&#34;Année demandée : {year}&#34;)
-    if int(year) in allyears():
-        return jsonify(byyear(year))
-    else:
-        logging.warning(f&#34;L&#39;année {year} n&#39;est pas dans la liste&#34;)
+    try:
+        if int(year) in allyears() and len(year) == 4:
+            logging.debug(f&#34;Année demandée : {year}&#34;)
+            return jsonify(byyear(year))
+        else:
+            logging.warning(f&#34;L&#39;année {year} n&#39;est pas dans la liste&#34;)
+            abort(404)
+    except ValueError as e:
+        logging.warning(f&#34;Erreur : {e}&#34;)
+        logging.warning(f&#34;{year} n&#39;est pas une année&#34;)
         abort(404)
 
 
@@ -159,12 +166,54 @@ def per_capita(country):
       description: print CO2 emissions (in tons per capita)
     in relation to the different survey years.
     &#34;&#34;&#34;
-    logging.debug(f&#34;Utilisation de la fonction per_capita({country.title()})&#34;)
-    if country.title() in allcountries():
-        logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
-        return jsonify(bypercapita(country))
+    logging.debug(f&#34;Utilisation de la fonction per_capita({country})&#34;)
+    if country.lower() in allcountries():
+        logging.debug(f&#34;Pays demandé : {country}&#34;)
+        return jsonify(bypercapita(country.lower()))
+
     else:
-        logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
+        logging.warning(f&#34;Le pays {country} n&#39;est pas dans la liste&#34;)
+        abort(404)
+
+
+@app.route(&#39;/latest_by_continent/&lt;continents&gt;&#39;)
+def by_continent(continents):
+    &#34;&#34;&#34;
+    Cette fonction est utilisé si la route &#39;/latest_by_continent/&lt;country&gt;&#39;
+    est utilisée.
+    Si le continent choisi est dans la liste des continents de la
+    fonction allcontinent() alors on appel la fonction bycontinent()
+    Sinon un message d&#39;erreur nous préviens que le continent choisi n&#39;est pas
+    dans la liste.
+
+    This function is used if the route &#39;/latest_by_continent/&lt;continents&gt;&#39;
+    is used.
+    If the selected continent is in the list of continents in the
+    allcontinent() function then we call the function bycontinent()
+    Otherwise an error message will warn us that the selected country is not in
+    the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/latest_by_continent/europe
+    result : {
+        &#34;Continent&#34;: &#34;Europe&#34;,
+        &#34;Year&#34;: 2017,
+        &#34;Emissions&#34;: 125318.85465853658
+        }
+      description: print the latest entry for total CO2 emissions
+    in Thousands of tons.
+    &#34;&#34;&#34;
+    # on veut la valeur la plus récente
+    # des emissions totales pour le pays demandé
+    logging.debug(
+        f&#34;Utilisation de la fonction by_continent({continents})&#34;)
+    if continents.title() in allcontinent():
+        logging.debug(f&#34;Continent demandé : {continents}&#34;)
+        return jsonify(bycontinent(continents.title()))
+    else:
+        logging.warning(
+            f&#34;Le continent {continents} n&#39;est pas dans la liste&#34;)
         abort(404)
 
 
@@ -183,7 +232,7 @@ if __name__ == &#34;__main__&#34;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="app.average_for_year"><code class="name flex">
+<dt id="app_o.average_for_year"><code class="name flex">
 <span>def <span class="ident">average_for_year</span></span>(<span>year)</span>
 </code></dt>
 <dd>
@@ -236,15 +285,91 @@ def average_for_year(year):
     # on cherche la moyenne des émissions
     # totales au niveau mondial pour une année demandée
     logging.debug(f&#34;Utilisation de la fonction average_for_year({year})&#34;)
-    logging.debug(f&#34;Année demandée : {year}&#34;)
-    if int(year) in allyears():
-        return jsonify(byyear(year))
-    else:
-        logging.warning(f&#34;L&#39;année {year} n&#39;est pas dans la liste&#34;)
+    try:
+        if int(year) in allyears() and len(year) == 4:
+            logging.debug(f&#34;Année demandée : {year}&#34;)
+            return jsonify(byyear(year))
+        else:
+            logging.warning(f&#34;L&#39;année {year} n&#39;est pas dans la liste&#34;)
+            abort(404)
+    except ValueError as e:
+        logging.warning(f&#34;Erreur : {e}&#34;)
+        logging.warning(f&#34;{year} n&#39;est pas une année&#34;)
         abort(404)</code></pre>
 </details>
 </dd>
-<dt id="app.by_country"><code class="name flex">
+<dt id="app_o.by_continent"><code class="name flex">
+<span>def <span class="ident">by_continent</span></span>(<span>continents)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Cette fonction est utilisé si la route '/latest_by_continent/<country>'
+est utilisée.
+Si le continent choisi est dans la liste des continents de la
+fonction allcontinent() alors on appel la fonction bycontinent()
+Sinon un message d'erreur nous préviens que le continent choisi n'est pas
+dans la liste.</p>
+<p>This function is used if the route '/latest_by_continent/<continents>'
+is used.
+If the selected continent is in the list of continents in the
+allcontinent() function then we call the function bycontinent()
+Otherwise an error message will warn us that the selected country is not in
+the list.</p>
+<hr>
+<h2 id="example-request-for-api">Example Request For Api</h2>
+<p>get: <a href="http://localhost:5000/latest_by_continent/europe">http://localhost:5000/latest_by_continent/europe</a>
+result : {
+"Continent": "Europe",
+"Year": 2017,
+"Emissions": 125318.85465853658
+}
+description: print the latest entry for total CO2 emissions
+in Thousands of tons.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.route(&#39;/latest_by_continent/&lt;continents&gt;&#39;)
+def by_continent(continents):
+    &#34;&#34;&#34;
+    Cette fonction est utilisé si la route &#39;/latest_by_continent/&lt;country&gt;&#39;
+    est utilisée.
+    Si le continent choisi est dans la liste des continents de la
+    fonction allcontinent() alors on appel la fonction bycontinent()
+    Sinon un message d&#39;erreur nous préviens que le continent choisi n&#39;est pas
+    dans la liste.
+
+    This function is used if the route &#39;/latest_by_continent/&lt;continents&gt;&#39;
+    is used.
+    If the selected continent is in the list of continents in the
+    allcontinent() function then we call the function bycontinent()
+    Otherwise an error message will warn us that the selected country is not in
+    the list.
+    ---
+    example request for API
+    ---
+    get: http://localhost:5000/latest_by_continent/europe
+    result : {
+        &#34;Continent&#34;: &#34;Europe&#34;,
+        &#34;Year&#34;: 2017,
+        &#34;Emissions&#34;: 125318.85465853658
+        }
+      description: print the latest entry for total CO2 emissions
+    in Thousands of tons.
+    &#34;&#34;&#34;
+    # on veut la valeur la plus récente
+    # des emissions totales pour le pays demandé
+    logging.debug(
+        f&#34;Utilisation de la fonction by_continent({continents})&#34;)
+    if continents.title() in allcontinent():
+        logging.debug(f&#34;Continent demandé : {continents}&#34;)
+        return jsonify(bycontinent(continents.title()))
+    else:
+        logging.warning(
+            f&#34;Le continent {continents} n&#39;est pas dans la liste&#34;)
+        abort(404)</code></pre>
+</details>
+</dd>
+<dt id="app_o.by_country"><code class="name flex">
 <span>def <span class="ident">by_country</span></span>(<span>country)</span>
 </code></dt>
 <dd>
@@ -296,54 +421,55 @@ def by_country(country):
     &#34;&#34;&#34;
     # on veut la valeur la plus récente
     # des emissions totales pour le pays demandé
-    logging.debug(f&#34;Utilisation de la fonction by_country({country.title()})&#34;)
-    if country.title() in allcountries():
-        logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
-        return jsonify(bycountry(country))
+    logging.debug(f&#34;Utilisation de la fonction by_country({country})&#34;)
+    if country.lower() in allcountries():
+        logging.debug(f&#34;Pays demandé : {country}&#34;)
+        return jsonify(bycountry(country.lower()))
+
     else:
-        logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
+        logging.warning(f&#34;Le pays {country} n&#39;est pas dans la liste&#34;)
         abort(404)</code></pre>
 </details>
 </dd>
-<dt id="app.hello_world"><code class="name flex">
-<span>def <span class="ident">hello_world</span></span>(<span>)</span>
+<dt id="app_o.index"><code class="name flex">
+<span>def <span class="ident">index</span></span>(<span>)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Cette fonction permet de vérifier que la route pour l'API
-fonctionne en affichant 'Hello, World!'.</p>
-<p>This function checks that the route for the API
-works by displaying 'Hello, World!.</p>
+fonctionne en arrivant sur le manuel du fonctionnement de l'API .</p>
+<p>This function checks that the route for the PLC
+works by arriving on the manuel of the operation of the API .</p>
 <hr>
 <h2 id="example-request-for-api">Example Request For Api</h2>
 <p>get: <a href="http://localhost:5000/">http://localhost:5000/</a>
-result : Hello, World!
-description: print 'Hello, World!'</p></div>
+result : Manuel API en page HTML
+description: Manuel de l'API en HTML</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@app.route(&#39;/&#39;)
-def hello_world():
+def index():
     &#34;&#34;&#34;
     Cette fonction permet de vérifier que la route pour l&#39;API
-    fonctionne en affichant &#39;Hello, World!&#39;.
+    fonctionne en arrivant sur le manuel du fonctionnement de l&#39;API .
 
-    This function checks that the route for the API
-    works by displaying &#39;Hello, World!.
+    This function checks that the route for the PLC
+    works by arriving on the manuel of the operation of the API .
     ---
     example request for API
     ---
     get: http://localhost:5000/
-    result : Hello, World!
-      description: print &#39;Hello, World!&#39;
+    result : Manuel API en page HTML
+      description: Manuel de l&#39;API en HTML
     &#34;&#34;&#34;
-    logging.debug(&#34;Utilisation de la fonction hello_world()&#34;)
+    logging.debug(&#34;Utilisation de la fonction index()&#34;)
     logging.debug(&#34;L&#39;app fonctionne correctement&#34;)
     # utilisé pour tester si l&#39;app fonctionne bien
-    return &#39;Hello, World!&#39;</code></pre>
+    return render_template(&#39;index.html&#39;)</code></pre>
 </details>
 </dd>
-<dt id="app.per_capita"><code class="name flex">
+<dt id="app_o.per_capita"><code class="name flex">
 <span>def <span class="ident">per_capita</span></span>(<span>country)</span>
 </code></dt>
 <dd>
@@ -411,12 +537,13 @@ def per_capita(country):
       description: print CO2 emissions (in tons per capita)
     in relation to the different survey years.
     &#34;&#34;&#34;
-    logging.debug(f&#34;Utilisation de la fonction per_capita({country.title()})&#34;)
-    if country.title() in allcountries():
-        logging.debug(f&#34;Pays demandé : {country.title()}&#34;)
-        return jsonify(bypercapita(country))
+    logging.debug(f&#34;Utilisation de la fonction per_capita({country})&#34;)
+    if country.lower() in allcountries():
+        logging.debug(f&#34;Pays demandé : {country}&#34;)
+        return jsonify(bypercapita(country.lower()))
+
     else:
-        logging.warning(f&#34;Le pays {country.title()} n&#39;est pas dans la liste&#34;)
+        logging.warning(f&#34;Le pays {country} n&#39;est pas dans la liste&#34;)
         abort(404)</code></pre>
 </details>
 </dd>
@@ -433,10 +560,11 @@ def per_capita(country):
 <ul id="index">
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="app.average_for_year" href="#app.average_for_year">average_for_year</a></code></li>
-<li><code><a title="app.by_country" href="#app.by_country">by_country</a></code></li>
-<li><code><a title="app.hello_world" href="#app.hello_world">hello_world</a></code></li>
-<li><code><a title="app.per_capita" href="#app.per_capita">per_capita</a></code></li>
+<li><code><a title="app_o.average_for_year" href="#app_o.average_for_year">average_for_year</a></code></li>
+<li><code><a title="app_o.by_continent" href="#app_o.by_continent">by_continent</a></code></li>
+<li><code><a title="app_o.by_country" href="#app_o.by_country">by_country</a></code></li>
+<li><code><a title="app_o.index" href="#app_o.index">index</a></code></li>
+<li><code><a title="app_o.per_capita" href="#app_o.per_capita">per_capita</a></code></li>
 </ul>
 </li>
 </ul>
