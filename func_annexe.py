@@ -33,10 +33,10 @@ def bycountry(country):
     """
     logging.debug(f"Utilisation de la fonction bycountry({country.title()})")
     df = readcsv('Region', 'Year', 'Value')
-    df = df.loc[df['Region'].isin([country.title()])]
+    df = df.loc[df['Region'].isin([country])]
     df = df.sort_values(by='Year', ascending=False)
     res = {}
-    res["Country"] = str(df.iloc[0][0])
+    res["Country"] = str(df.iloc[0][0]).title()
     res["Year"] = int(df.iloc[0][1])
     res["Emissions"] = float(df.iloc[0][2])
     logging.debug(res)
@@ -97,7 +97,7 @@ def bypercapita(country):
     logging.debug(f"Utilisation de la fonction bypercapita({country.title()})")
     capita = ["Emissions per capita (metric tons of carbon dioxide)"]
     df = readcsv('Region', 'Year', 'Emission', 'Value')
-    df = df.loc[df['Region'].isin([country.title()])]
+    df = df.loc[df['Region'].isin([country])]
     df = df.loc[df['Emission'].isin(capita)]
     res = {}
     nbannee = len(allyears())

@@ -16,7 +16,7 @@ def readcsv(*colonnes):
     """
     logging.debug(f"Utilisation de la fonction readcsv({colonnes})")
     logging.info("Lecture du fichier csv")
-    return pandas.read_csv(
+    df = pandas.read_csv(
         'data.csv',
         header=2,
         names=[
@@ -27,4 +27,25 @@ def readcsv(*colonnes):
             'Value',
             'Footnote',
             'Source'],
-        usecols=colonnes)
+        usecols=colonnes,
+        encoding='utf-8')
+    df['Region'] = df['Region'].replace(
+        ['Bolivia (Plurin. State of)'], 'Bolivia')
+    df['Region'] = df['Region'].replace(
+        ['China, Hong Kong SAR'], 'China')
+    df['Region'] = df['Region'].replace(
+        ['Côte d’Ivoire'], 'Ivory Coast')
+    df['Region'] = df['Region'].replace(
+        ["Dem. People's Rep. Korea"], 'North Korea')
+    df['Region'] = df['Region'].replace(
+        ['Dem. Rep. of the Congo'], 'Congo')
+    df['Region'] = df['Region'].replace(
+        ['Iran (Islamic Republic of)'], 'Iran')
+    df['Region'] = df['Region'].replace(
+        ['Republic of Korea'], 'South Korea')
+    df['Region'] = df['Region'].replace(
+        ['United Rep. of Tanzania'], 'Tanzania')
+    df['Region'] = df['Region'].replace(
+        ['Venezuela (Boliv. Rep. of)'], 'Venezuela')
+    df['Region'] = df['Region'].str.lower()
+    return df

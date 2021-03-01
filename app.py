@@ -55,9 +55,9 @@ def by_country(country):
     # on veut la valeur la plus récente
     # des emissions totales pour le pays demandé
     logging.debug(f"Utilisation de la fonction by_country({country.title()})")
-    if country.title() in allcountries():
+    if country.lower() in allcountries():
         logging.debug(f"Pays demandé : {country.title()}")
-        return jsonify(bycountry(country))
+        return jsonify(bycountry(country.lower()))
 
     else:
         logging.warning(f"Le pays {country.title()} n'est pas dans la liste")
@@ -138,9 +138,9 @@ def per_capita(country):
     in relation to the different survey years.
     """
     logging.debug(f"Utilisation de la fonction per_capita({country.title()})")
-    if country.title() in allcountries():
+    if country.lower() in allcountries():
         logging.debug(f"Pays demandé : {country.title()}")
-        return jsonify(bypercapita(country))
+        return jsonify(bypercapita(country.lower()))
 
     else:
         logging.warning(f"Le pays {country.title()} n'est pas dans la liste")

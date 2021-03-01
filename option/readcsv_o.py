@@ -27,7 +27,8 @@ def readcsv(*colonnes):
             'Value',
             'Footnote',
             'Source'],
-        usecols=colonnes)
+        usecols=colonnes,
+        encoding='utf-8')
     df['Region'] = df['Region'].replace(
         ['Bolivia (Plurin. State of)'], 'Bolivia')
     df['Region'] = df['Region'].replace(
