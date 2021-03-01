@@ -8,15 +8,21 @@ from readcsv import readcsv
 
 class TestApp(unittest.TestCase):
     def test_readcsv(self):
+        # on test si la sortie de la fonction test_readcsv est de type class
         self.assertIsInstance(type(readcsv()), type)
+        # on test que la sortie est != de None
         self.assertIsNotNone(readcsv())
 
     def test_allcountry(self):
+        # test que la fonction retourne un liste
+        # qu'elle n'est pas vide et que chaque élement est un string
         self.assertIs(type(func_annexe.allcountries()), list)
         self.assertIs(type(func_annexe.allcountries()[0]), str)
         self.assertNotEqual(func_annexe.allcountries(), [])
 
     def test_bycountry(self):
+        # test que la fonction retourne un dictionnaire
+        # test de 2 exemples
         self.assertIs(type(func_annexe.bycountry("Cameroon")), dict)
         self.assertEqual(
             func_annexe.bycountry("Cameroon"),
@@ -26,12 +32,15 @@ class TestApp(unittest.TestCase):
             {'Country': 'Serbia', 'Year': 2017, 'Emissions': 46129.569})
 
     def test_allyears(self):
+        # test que la fonction retourne une liste avec les bonnes valeurs
         self.assertIs(type(func_annexe.allyears()), list)
         self.assertEqual(
             func_annexe.allyears(),
             [1975, 1985, 1995, 2005, 2010, 2015, 2016, 2017])
 
     def test_byyear(self):
+        # test que la fonction retourne un dictionnaire
+        # test de 2 exemples
         self.assertIs(type(func_annexe.byyear(1995)), dict)
         self.assertEqual(
             func_annexe.byyear(1995),
@@ -41,6 +50,8 @@ class TestApp(unittest.TestCase):
             {"Year": 2010, "Total": 207976.702})
 
     def test_bypercapita(self):
+        # test que la fonction retourne un dictionnaire
+        # test de 2 exemples
         self.assertIs(type(func_annexe.bypercapita('Cameroon')), dict)
         self.assertEqual(
             func_annexe.bypercapita('Cameroon'),
