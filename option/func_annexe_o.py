@@ -113,6 +113,11 @@ def bypercapita(country):
 
 
 def allcontinent():
+    """
+    Liste de tout les continents
+
+    List of all continents
+    """
     all_continent = [
         "Europe",
         "Asia",
@@ -126,6 +131,15 @@ def allcontinent():
 
 
 def country_to_continent(country_name):
+    """
+    Cette fonction permet de retrouver le continent en fonction du pays renseigné
+    country_name = "France"
+    country_continent_name retourne "Europe"
+
+    This function allows you to find the continent according to the country you have entered
+    country_name = "France
+    country_continent_name returns "Europe".
+    """
     country_alpha2 = pc.country_name_to_country_alpha2(country_name)
     country_continent_code = pc.country_alpha2_to_continent_code(
         country_alpha2)
@@ -145,6 +159,19 @@ continent = {}
 
 
 def nom_continent(country_name):
+    """
+    En fonction du retour du continent par rapport au nom de pays renseigné,
+    ajout le pays dans la liste du dictionnaire correpondant.
+    Si country_name = "France"
+    Ajout "France" à la liste europe associé à la clé "Europe"
+    du dictionnaire continent
+
+    According to the return of the continent in relation to the country name filled in,
+    added the country in the list of the corresponding dictionary.
+    If country_name = "France
+    Addition of "France" to the europe list associated with the key "Europe".
+    from the continent dictionary
+    """
     try:
         if country_name.title() == 'Kosovo':
             europe.append(country_name)
@@ -189,6 +216,15 @@ def nom_continent(country_name):
 
 
 def percontinents():
+    """
+    Cette fonction permet de passer chaque pays du fichier csv
+    dans la fonction nom_continent et retourne le dictionnaire
+    continent complété
+
+    This function allows to pass each country from the csv file
+    in the function continent_name and returns the dictionary
+    continent completed
+    """
     for country_name in allcountries():
         nom_continent(country_name)
     return continent
@@ -197,6 +233,20 @@ def percontinents():
 def bycontinent(continents):
     """
     Fonction qui permet d'afficher la moyenne de CO2 pour un continent
+    Si continents = ""Asia"
+    Retourne {
+        "Continent": "Asia",
+        "Year": 2017,
+        "Emissions": 197420.5882857143
+        }
+
+    Function to display the average CO2 for a continent
+    If continents = ""Asia
+    Return {
+        "Continent": "Asia",
+        "Year: 2017,
+        "Emissions": 197420.5882857143
+        }
     """
     dfmoy = []
     for country in percontinents()[continents]:

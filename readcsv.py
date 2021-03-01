@@ -7,12 +7,16 @@ def readcsv(*colonnes):
     Cette fonction permet de lire le fichier csv avec pandas.read_csv(),
     sans prendre ne compte les 2 premières lignes avec header=2,
     renommant chaques colonnes avec names=[],
-    et permet d'utiliser les colonnes voulues avec usecols=(colonnes).
+    et permet d'utiliser les colonnes voulues avec usecols=(colonnes),
+    d'encoder le fichier en 'utf-8' et uniformise la langue et le format
+    de certain pays.
 
     This function reads the csv file with pandas.read_csv(),
     without taking into account the first 2 lines with header=2,
     renaming each column with names=[],
-    and allows to use the desired columns with usecols=(columns).
+    and allows to use the desired columns with usecols=(columns),
+    to encode the file in 'utf-8' and standardize the language and format.
+    of certain countries.
     """
     logging.debug(f"Utilisation de la fonction readcsv({colonnes})")
     logging.info("Lecture du fichier csv")

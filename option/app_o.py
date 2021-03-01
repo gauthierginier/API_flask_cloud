@@ -153,7 +153,7 @@ def by_continent(continents):
     """
     Cette fonction est utilisé si la route '/latest_by_continent/<country>'
     est utilisée.
-    Si le continent choisi est dans la liste des continent de la
+    Si le continent choisi est dans la liste des continents de la
     fonction allcontinent() alors on appel la fonction bycontinent()
     Sinon un message d'erreur nous préviens que le continent choisi n'est pas
     dans la liste.
